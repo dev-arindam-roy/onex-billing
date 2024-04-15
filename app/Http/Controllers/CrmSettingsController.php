@@ -24,7 +24,8 @@ class CrmSettingsController extends Controller
     public function saveChanges(Request $request)
     {
         DB::table('crm_settings')->where('id', 1)->update([
-            'name' => $request->input('name')
+            'name' => $request->input('name'),
+            'list_per_page' => $request->input('list_per_page') ?? 25
         ]);
         return redirect()->back()
             ->with('message_type', 'success')

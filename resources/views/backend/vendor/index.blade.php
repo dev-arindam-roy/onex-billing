@@ -4,39 +4,28 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css" />
 @endpush
 
-@section('page_header', 'Product Management')
+@section('page_header', 'Vendor Management')
 @section('page_breadcrumb')
     <li class="breadcrumb-item"><a href="#">Home</a></li>
-    <li class="breadcrumb-item"><a href="#">Product Management</a></li>
-    <li class="breadcrumb-item active">All Product Variants</li>
+    <li class="breadcrumb-item"><a href="javascript:void(0);" class="btn-reload">Vendor Management</a></li>
+    <li class="breadcrumb-item active">All Vendors</li>
 @endsection
 
-@section('content_title', 'All Product Variants')
+@section('content_title', 'All Vendors / Suppliers')
+
 @section('content_buttons')
-    <a href="{{ route('product.variant.addVariants') }}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add New Variant</a>
+    <a href="{{ route('vendor.add') }}" class="btn btn-primary btn-sm"><i class="fas fa-user-plus"></i> Add Vendor</a>
 @endsection
 
 @section('content_body')
-<form name="search_frm" id="searchFrm" action="" method="GET">
-    <div class="row mb-2">
-        <div class="col-md-3">
-            <input type="text" name="variant_name" id="searchVariantName" class="form-control" placeholder="Product Name" value="{{ (request()->has('variant_name')) ? request()->get('variant_name') : '' }}"/>
-        </div>
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-success">Search</button>
-            <a href="{{ route('product.variant.allVariants') }}" class="btn btn-danger">Clear</a>
-        </div>
-    </div>
-</form>
 <div class="row">
     <div class="col-md-12" id="displayData">
-        @include('backend.product.all-variants-render', array('data' => $data))
+        @include('backend.vendor.all-vendors-render', array('data' => $data))
     </div>
 </div>
 @endsection
 
 @section('content_footer')
-    
 @endsection
 
 @push('page_script')
@@ -47,12 +36,12 @@
 @push('page_js')
 <script>
 $(document).ready( function () {
-    $('body').on('click', '.remove-product-btn', function(e) {
+    $('body').on('click', '.remove-user-btn', function(e) {
         e.preventDefault();
         let deleteUrl = $(this).attr('href');
         Swal.fire({
             title: 'Are you sure?',
-            text: "You want to delete this product variant",
+            text: "You want to delete this vendor",
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -62,6 +51,24 @@ $(document).ready( function () {
             if(result.isConfirmed) {
                 displayLoading();
                 window.location.href = deleteUrl;
+            }
+        });
+    });
+    $('body').on('click', '.lock-unlock-user', function(e) {
+        e.preventDefault();
+        let actionUrl = $(this).attr('href');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to change the vendor status",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, do it!'
+        }).then((result) => {
+            if(result.isConfirmed) {
+                displayLoading();
+                window.location.href = actionUrl;
             }
         });
     });

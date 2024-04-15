@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserSigninController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VendorController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\ThemeSettingsController;
@@ -62,7 +64,7 @@ Route::prefix('auth')->group(function () {
             });
             Route::prefix('users')->group(function () {
                 Route::name('user.')->group(function () {
-                    Route::group(['middleware' => ['accessRoles:super-admin|sales-man']], function() {
+                    Route::group(['middleware' => ['accessRoles:super-admin|admin']], function() {
                         Route::controller(UserController::class)->group(function () {
                             Route::get('/', 'index')->name('index')->middleware(['accessRoles:super-admin']);
                             Route::get('/add', 'addUser')->name('add');
@@ -74,25 +76,38 @@ Route::prefix('auth')->group(function () {
                             Route::get('/profile-information/{id}', 'profileInformation')->name('profileInformation');
                             Route::post('/profile-information/{id}', 'saveProfileInformation')->name('saveProfileInformation');
                             Route::get('/reset-password/{id}', 'profileInformation')->name('resetPassword');
-                            Route::post('/reset-password/{id}', 'resetPassword')->name('resetSavePassword');
+                            Route::post('/save-reset-password/{id}', 'resetPassword')->name('resetSavePassword');
                             Route::get('/reset-username/{id}', 'profileInformation')->name('resetUsername');
-                            Route::post('/reset-username/{id}', 'resetUsername')->name('resetSaveUsername');
-                            Route::prefix('vendors')->group(function () {
-                                Route::name('vendor.')->group(function () {
-                                    Route::get('/', 'allVendors')->name('allVendors')->middleware(['accessRoles:super-admin']);
-                                });
-                            });
-                            Route::prefix('sales-man')->group(function () {
-                                Route::name('salesman.')->group(function () {
-                                    Route::get('/', 'allSalesman')->name('allSalesman')->middleware(['accessRoles:super-admin']);
-                                });
-                            });
-                            Route::prefix('customers')->group(function () {
-                                Route::name('customer.')->group(function () {
-                                    Route::get('/', 'allCustomer')->name('allCustomer');
-                                });
-                            });
+                            Route::post('/save-reset-username/{id}', 'resetUsername')->name('resetSaveUsername');
                             Route::post('/quick-add', 'quickAddUser')->name('quick-add');
+                        });
+                    });
+                });
+            });
+            Route::prefix('vendors')->group(function () {
+                Route::name('vendor.')->group(function () {
+                    Route::group(['middleware' => ['accessRoles:super-admin|admin']], function() {
+                        Route::controller(VendorController::class)->group(function () {
+                            Route::get('/', 'index')->name('index');
+                            Route::get('/add', 'add')->name('add');
+                            Route::post('/save', 'save')->name('save');
+                            Route::get('/edit/{id}', 'edit')->name('edit');
+                            Route::post('/update/{id}', 'update')->name('update');
+                            Route::get('/delete/{id}', 'delete')->name('delete');
+                        });
+                    });
+                });
+            });
+            Route::prefix('customers')->group(function () {
+                Route::name('customer.')->group(function () {
+                    Route::group(['middleware' => ['accessRoles:super-admin|admin']], function() {
+                        Route::controller(CustomerController::class)->group(function () {
+                            Route::get('/', 'index')->name('index');
+                            Route::get('/add', 'add')->name('add');
+                            Route::post('/save', 'save')->name('save');
+                            Route::get('/edit/{id}', 'edit')->name('edit');
+                            Route::post('/update/{id}', 'update')->name('update');
+                            Route::get('/delete/{id}', 'delete')->name('delete');
                         });
                     });
                 });

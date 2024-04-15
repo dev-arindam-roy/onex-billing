@@ -21,6 +21,16 @@
     <div class="col-md-3"></div>
     <div class="col-md-6"></div>
 </div>
+<div class="row">
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="displayPerPage" class="onex-form-label">List Per Page: <em>*</em></label>
+            <input type="number" name="list_per_page" id="displayPerPage" class="form-control" placeholder="Enter Number" min="25" max="500" required="required" value="{{ !empty($crm_settings->list_per_page) ? $crm_settings->list_per_page : 25 }}" />
+        </div>
+    </div>
+    <div class="col-md-3"></div>
+    <div class="col-md-6"></div>
+</div>
 </form>
 @endsection
 
@@ -48,12 +58,22 @@ $(document).ready(function() {
             name: {
                 required: true,
                 maxlength: 20
+            },
+            list_per_page: {
+                required: true,
+                min: 25,
+                max: 500
             }
         },
         messages: {
             name: {
                 required: 'Please enter crm name',
                 maxlength: 'Maximum 20 chars accepted'
+            },
+            list_per_page: {
+                required: 'Please enter a number',
+                min: 'Minimum is 25',
+                max: 'Maximum is 500'
             }
         },
         errorPlacement: function (error, element) {

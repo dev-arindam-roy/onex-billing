@@ -1,48 +1,47 @@
 @extends('backend.layout.app')
 
-@section('page_header', 'My Account')
+@section('page_header', 'Vendor Management')
 @section('page_breadcrumb')
     <li class="breadcrumb-item"><a href="#">Home</a></li>
-    <li class="breadcrumb-item active">My Profile</li>
+    <li class="breadcrumb-item"><a href="{{ route('vendor.index') }}">Vendor Management</a></li>
+    <li class="breadcrumb-item active">Add Vendor</li>
 @endsection
 
-@section('content_title', 'My Profile')
+@section('content_title', 'Add New Vendor')
 
 @section('content_buttons')
-    
+    <a href="{{ route('vendor.index') }}" class="btn btn-primary btn-sm"><i class="fas fa-users"></i> All Vendors</a>
 @endsection
 
 @section('content_body')
-<form name="frm" id="frmx" action="{{ route('myprofile.myProfileUpdate') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+<form name="frm" id="frmx" action="{{ route('vendor.save') }}" method="POST">
 @csrf
 <div class="row">
     <div class="col-md-4">
         <div class="form-group">
             <label for="firstName" class="onex-form-label">First Name: <em>*</em></label>
-            <input type="text" name="first_name" id="firstName" class="form-control" placeholder="Enter First Name" required="required" value="{{ $user->first_name }}"/>
+            <input type="text" name="first_name" id="firstName" class="form-control" placeholder="Enter First Name" required="required"/>
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label for="lastName" class="onex-form-label">Last Name: <em>*</em></label>
-            <input type="text" name="last_name" id="lastName" class="form-control" placeholder="Enter Last Name" required="required" value="{{ $user->last_name }}"/>
+            <input type="text" name="last_name" id="lastName" class="form-control" placeholder="Enter Last Name" required="required"/>
         </div>
     </div>
-    <div class="col-md-4 text-right">
-        <a href="{{ route('myprofile.changePassword') }}"><i class="fas fa-key"></i> Change Password?</a>
-    </div>
+    <div class="col-md-4"></div>
 </div>
 <div class="row">
     <div class="col-md-4">
         <div class="form-group">
             <label for="phoneNumber" class="onex-form-label">Phone Number: <em>*</em></label>
-            <input type="number" name="phone_number" id="phoneNumber" class="form-control" placeholder="Enter Mobile Number" required="required" autocomplete="new-phone-number" value="{{ $user->phone_number }}"/>
+            <input type="number" name="phone_number" id="phoneNumber" class="form-control" placeholder="Enter Mobile Number" required="required" autocomplete="new-phone-number"/>
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label for="whatsappNumber" class="onex-form-label">Whatsapp Number:</label>
-            <input type="number" name="whatsapp_number" id="whatsappNumber" class="form-control" placeholder="Enter Whatsapp Number" value="{{ $user->whatsapp_number }}"/>
+            <input type="number" name="whatsapp_number" id="whatsappNumber" class="form-control" placeholder="Enter Whatsapp Number"/>
         </div>
     </div>
 </div>
@@ -50,50 +49,43 @@
     <div class="col-md-4">
         <div class="form-group">
             <label for="emailId" class="onex-form-label">Email Id: <em>*</em></label>
-            <input type="email" name="email_id" id="emailId" class="form-control" placeholder="Enter Email Id" required="required" autocomplete="new-email" value="{{ $user->email_id }}"/>
+            <input type="email" name="email_id" id="emailId" class="form-control" placeholder="Enter Email Id" required="required" autocomplete="new-email"/>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <blockquote>
+            <p><strong>TAX Information</strong></p>
+        </blockquote>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="gstNo" class="onex-form-label">GST No:</label>
+            <input type="text" name="gst_no" id="gstNo" class="form-control" placeholder="Enter GST No" autocomplete="new-gst-no"/>
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
-            <label for="userName" class="onex-form-label">User Name: <em>*</em></label>
-            <input type="text" name="user_name" id="userName" class="form-control" placeholder="Enter User Name" required="required" autocomplete="new-username" value="{{ $user->user_name }}"/>
+            <label for="vatNo" class="onex-form-label">VAT No:</label>
+            <input type="text" name="vat_no" id="vatNo" class="form-control" placeholder="Enter VAT No" autocomplete="new-vat-no"/>
         </div>
     </div>
 </div>
 <div class="row">
-    <div class="col-md-8">
-        <div class="form-group">
-            <label for="profileImage">Profile Image:</label>
-            <div class="custom-file">
-                <input type="file" name="image" accept="image/*" class="custom-file-input" id="profileImage">
-                <label class="custom-file-label" for="profileImage">Choose file</label>
-            </div>
-        </div>
+    <div class="col-md-12">
+        <blockquote>
+            <p><strong>Address Information</strong></p>
+        </blockquote>
     </div>
-    <div class="col-md-4"></div>
 </div>
-@if(!empty($user->userProfile) && !empty($user->userProfile->image))
-<div class="row">
-    <div class="col-md-3">
-        <div class="onex-preview-imgbox">
-            <image src="{{ asset('public/uploads/images/users/thumbnail/' . $user->userProfile->image) }}" class="img-thumbnail"/>
-            <a href="javascript:void(0);" class="table-image-remove" title="Remove Image" 
-                data-table-row-id="{{ $user->userProfile->id }}" 
-                data-table-name="users_profile"
-                data-table-field="image"><i class="fas fa-trash-alt text-danger"></i></a>
-        </div>
-    </div>
-    <div class="col-md-9"></div>
-</div>
-@endif
 <div class="row">
     <div class="col-md-8">
         <div class="form-group">
             <label for="userAddress" class="onex-form-label">Full Address:</label>
-            <textarea name="full_address" id="userAddress" class="form-control" autocomplete="false">@if(!empty($user->userProfile)){{ $user->userProfile->full_address }}@endif</textarea>
-            <input type="hidden" name="geo_address" id="geoAddress" value="@if(!empty($user->userProfile)){{ $user->userProfile->geo_address }}@endif"/>
-            <input type="hidden" name="latitude" id="latitude" value="@if(!empty($user->userProfile)){{ $user->userProfile->latitude }}@endif"/>
-            <input type="hidden" name="longitude" id="longitude" value="@if(!empty($user->userProfile)){{ $user->userProfile->longitude }}@endif"/> 
+            <textarea name="full_address" id="userAddress" class="form-control" autocomplete="false" placeholder="Full Address"></textarea>
         </div>
     </div>
     <div class="col-md-4"></div>
@@ -102,25 +94,25 @@
     <div class="col-md-2">
         <div class="form-group">
             <label for="userPincode" class="onex-form-label">Pincode:</label>
-            <input type="text" maxlength="10" name="pincode" id="userPincode" class="form-control" value="@if(!empty($user->userProfile)){{ $user->userProfile->pincode }}@endif"/>
+            <input type="text" maxlength="10" name="pincode" id="userPincode" class="form-control" placeholder="Pincode"/>
         </div>
     </div>
     <div class="col-md-2">
         <div class="form-group">
             <label for="userCity" class="onex-form-label">City:</label>
-            <input type="text" name="city" id="userCity" class="form-control" value="@if(!empty($user->userProfile)){{ $user->userProfile->city }}@endif"/>
+            <input type="text" name="city" id="userCity" class="form-control" placeholder="City"/>
         </div>
     </div>
     <div class="col-md-2">
         <div class="form-group">
             <label for="userState" class="onex-form-label">State:</label>
-            <input type="text" name="state" id="userState" class="form-control" value="@if(!empty($user->userProfile)){{ $user->userProfile->state }}@endif"/>
+            <input type="text" name="state" id="userState" class="form-control" placeholder="State"/>
         </div>
     </div>
     <div class="col-md-2">
         <div class="form-group">
             <label for="userCountry" class="onex-form-label">Country:</label>
-            <input type="text" name="country" id="userCountry" class="form-control" value="IND" value="@if(!empty($user->userProfile)){{ $user->userProfile->country }}@endif"/>
+            <input type="text" name="country" id="userCountry" class="form-control" placeholder="Country" value="IND"/>
         </div>
     </div>
     <div class="col-md-4"></div>
@@ -129,18 +121,19 @@
     <div class="col-md-8">
         <div class="form-group">
             <label for="userLandmark" class="onex-form-label">Address Landmark: </label>
-            <input type="text" name="land_mark" id="userLandmark" class="form-control" value="@if(!empty($user->userProfile)){{ $user->userProfile->land_mark }}@endif">
+            <input type="text" name="land_mark" id="userLandmark" class="form-control" placeholder="Landmark" />
         </div>
     </div>
     <div class="col-md-4"></div>
 </div>
+<input type="hidden" name="user_category" id="userCategory" value="2"/>
 </form>
 @endsection
 
 @section('content_footer')
 <div class="row">
     <div class="col-md-6">
-        <button type="button" class="btn btn-success" id="saveChangesBtn"><i class="fas fa-save"></i> Save Changes</button>
+        <button type="button" class="btn btn-success" id="addUserBtn"><i class="fas fa-plus"></i> Add Vendor</button>
     </div>
     <div class="col-md-6"></div>
 </div>
@@ -185,12 +178,6 @@ $(document).ready(function() {
                 digits: true,
                 maxlength: 10,
                 minlength: 10
-            },
-            user_name: {
-                required: true,
-                minlength: 6,
-                maxlength: 20,
-                validUsername: true
             }
         },
         messages: {
@@ -217,19 +204,19 @@ $(document).ready(function() {
                 digits: 'Please enter valid mobile number',
                 maxlength: '10 digitis mobile number required',
                 minlength: '10 digitis mobile number required'
-            },
-            user_name: {
-                required: 'Please enter new username',
-                minlength: 'Minimum 6 chars require',
-                maxlength: 'Maximum 20 chars accepted'
             }
         }
     });
-    $('#saveChangesBtn').on('click', function() {
+    $('#addUserBtn').on('click', function() {
         if($("#frmx").valid()) {
             displayLoading();
-            $('#saveChangesBtn').attr('disabled', 'disabled');
+            $('#addUserBtn').attr('disabled', 'disabled');
             $("#frmx").submit();
+        }
+    });
+    $('input[name="phone_number"]').on('blur', function() {
+        if($(this).valid()) {
+            $('input[name="whatsapp_number"]').val($(this).val());
         }
     });
 });

@@ -57,6 +57,34 @@ $(document).ready(function() {
             }
         });
     });
+    $('body').on('click', '.onex-pagination .pagination a', function(event) {
+        event.preventDefault();
+        let _this = $(this);
+        let url = _this.attr('href');
+        let page = url.split('page=')[1];
+        ajaxPagination(url, page);
+        $('.onex-pagination ul.pagination li').removeClass('active');
+        _this.parent('li').addClass('active');
+    });
+    function ajaxPagination(pageUrl, page = 1) {
+        $.ajax({
+            type: 'GET',
+            url: pageUrl,
+            cache: false,
+            datatype: 'html',
+            beforeSend: function() {
+                displayLoading();
+            },
+            success: function(data) {
+                $("#displayData").empty().html(data);
+                closeSwal();
+                //location.hash = page;
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    }
 });
 </script>
 @php

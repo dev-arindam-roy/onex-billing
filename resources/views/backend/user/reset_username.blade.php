@@ -1,58 +1,23 @@
-@php
-    $indexUrl = route('user.index');
-    $pageKey = 'User';
-    $allPageKeys = ['vendor', 'sales-man', 'customer', 'procurement-associate', 'delivery-man'];
-    $specificRoleId = '';
-    if(isset($_GET['user']) && !empty($_GET['user'])) {
-        if (in_array($_GET['user'], $allPageKeys)) {
-            $pageKey = ucwords(str_replace('-', ' ', $_GET['user']));
-            if ($_GET['user'] == 'vendor') {
-                $specificRoleId = 5;
-                $indexUrl = route('user.vendor.allVendors');
-            } else if ($_GET['user'] == 'sales-man') {
-                $specificRoleId = 4;
-                $indexUrl = route('user.salesman.allSalesman');
-            } else if ($_GET['user'] == 'customer') {
-                $specificRoleId = 6;
-                $indexUrl = route('user.customer.allCustomer');
-            } else if ($_GET['user'] == 'procurement-associate') {
-                $specificRoleId = 7;
-                $indexUrl = route('user.procurementAssociate.allProcurementAssociate');
-            } else if ($_GET['user'] == 'delivery-man') { 
-                $specificRoleId = 8;
-                $indexUrl = route('user.deliveryman.allDeliveryBoys');
-            } else {
-                $specificRoleId = '';
-            }
-        }
-    }
-
-    $isResetEnabled = false;
-    if($user->is_crm_access == 1 || ($user->is_crm_access == 0 && in_array('customer', Helper::userRoles($user->id)))) {
-        $isResetEnabled = true;
-    }
-@endphp
-
 @extends('backend.layout.app')
 
 @section('page_header', 'Account Settings')
 @section('page_breadcrumb')
     <li class="breadcrumb-item"><a href="#">Home</a></li>
-    <li class="breadcrumb-item"><a href="{{ $indexUrl }}">{{ $pageKey }} Management</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('user.index') }}">User Management</a></li>
     <li class="breadcrumb-item active">Account Settings</li>
 @endsection
 
-@section('content_title', $pageKey . ' Account Settings')
+@section('content_title', 'Reset Login Username')
 
 @section('content_buttons')
-    <a href="{{ route('user.edit', array('id' => $user->id)) }}" class="btn btn-success btn-sm"><i class="far fa-user"></i> Edit Account</a>
-    <a href="{{ $indexUrl }}" class="btn btn-primary btn-sm"><i class="fas fa-users"></i> All {{ $pageKey . 's' }}</a>
+    <a href="{{ route('user.edit', array('id' => $user->hash_id)) }}" class="btn btn-success btn-sm"><i class="far fa-user"></i> Edit Account</a>
+    <a href="{{ route('user.index') }}" class="btn btn-primary btn-sm"><i class="fas fa-users"></i> All Users</a>
 @endsection
 
 @section('content_body')
 
-@if($isResetEnabled)
-<form name="frm" id="frmx" action="{{ route('user.resetSaveUsername', array('id' => $user->id)) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+@if($user->is_crm_access == 1)
+<form name="frm" id="frmx" action="{{ route('user.resetSaveUsername', array('id' => $user->hash_id)) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
 @csrf
 <div class="row">
     <div class="col-md-4">
@@ -81,7 +46,7 @@
 @section('content_footer')
 <div class="row">
     <div class="col-md-6">
-        @if($isResetEnabled)
+        @if($user->is_crm_access == 1)
             <button type="button" class="btn btn-success" id="saveChangesBtn"><i class="fas fa-key"></i> Update Username</button>
         @endif
     </div>

@@ -65,9 +65,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'ifAuth' => \App\Http\Middleware\IfAuth::class,
         'ifNotAuth' => \App\Http\Middleware\IfNotAuth::class,
-        'viewdata' => \App\Http\Middleware\AppViewData::class,
-        'customerAuth' => \App\Http\Middleware\EcommCustomerAuth::class,
-        'customerNotAuth' => \App\Http\Middleware\EcommCustomerNotAuth::class,
         'accessRoles' => \App\Http\Middleware\AccessRoles::class,
     ];
 }

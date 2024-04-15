@@ -40,6 +40,7 @@ class IfAuth
             $defaultShareData = [];
             $defaultShareData['theme'] = $theme;
             $defaultShareData['crm'] = $crm;
+            $request->request->add(['pagination' => $crm->list_per_page]);
             View::share('defaultShareData', $defaultShareData);
             $response = $next($request);
             return $response->header('Cache-Control','nocache, no-store, max-age=0, must-revalidate')

@@ -1,57 +1,17 @@
-@php
-    $authId = auth()->user()->id;
-    $authRoles = Helper::authRoles();
-    $indexUrl = route('user.index');
-    $pageKey = 'User';
-    $allPageKeys = ['vendor', 'sales-man', 'customer', 'procurement-associate', 'delivery-man'];
-    $specificRoleId = '';
-    if(isset($_GET['user']) && !empty($_GET['user'])) {
-        if (in_array($_GET['user'], $allPageKeys)) {
-            $pageKey = ucwords(str_replace('-', ' ', $_GET['user']));
-            if ($_GET['user'] == 'vendor') {
-                $specificRoleId = 5;
-                $indexUrl = route('user.vendor.allVendors');
-            } else if ($_GET['user'] == 'sales-man') {
-                $specificRoleId = 4;
-                $indexUrl = route('user.salesman.allSalesman');
-            } else if ($_GET['user'] == 'customer') {
-                $specificRoleId = 6;
-                $indexUrl = route('user.customer.allCustomer');
-            } else if ($_GET['user'] == 'procurement-associate') {
-                $specificRoleId = 7;
-                $indexUrl = route('user.procurementAssociate.allProcurementAssociate');
-            } else if ($_GET['user'] == 'delivery-man') { 
-                $specificRoleId = 8;
-                $indexUrl = route('user.deliveryman.allDeliveryBoys');
-            } else {
-                $specificRoleId = '';
-            }
-        }
-    }
-    $isCustomer = false;
-    if (!empty($user->userRoles) && count($user->userRoles)) {
-        foreach($user->userRoles as $uRole) {
-            if(!empty($uRole->role) && !empty($uRole->role->key_name) && $uRole->role->key_name == 'customer') {
-                $isCustomer = true;
-            }
-        }
-    }
-@endphp
-
 @extends('backend.layout.app')
 
 @section('page_header', 'Profile Management')
 @section('page_breadcrumb')
     <li class="breadcrumb-item"><a href="#">Home</a></li>
-    <li class="breadcrumb-item"><a href="{{ $indexUrl }}">{{ $pageKey }} Management</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('user.index') }}">User Management</a></li>
     <li class="breadcrumb-item active">Profile Management</li>
 @endsection
 
-@section('content_title', $pageKey . ' Additional Informations')
+@section('content_title', 'User Additional Informations')
 
 @section('content_buttons')
-    <a href="{{ route('user.edit', array('id' => $user->hash_id)) }}@if((isset($isCustomer) && $isCustomer)){{ '?user=customer' }}@endif" class="btn btn-success btn-sm"><i class="far fa-user"></i> Edit Account</a>
-    <a href="{{ $indexUrl }}" class="btn btn-primary btn-sm"><i class="fas fa-users"></i> All {{ $pageKey . 's' }}</a>
+    <a href="{{ route('user.edit', array('id' => $user->hash_id)) }}" class="btn btn-success btn-sm"><i class="far fa-user"></i> Edit Account</a>
+    <a href="{{ route('user.index') }}" class="btn btn-primary btn-sm"><i class="fas fa-users"></i> All Users</a>
 @endsection
 
 @section('content_body')
@@ -146,7 +106,6 @@
 @push('page_script')
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAP_API_KEY') }}&sensor=false&libraries=places"></script>
 @endpush
 
 @push('page_js')
@@ -205,75 +164,6 @@ $(document).ready(function() {
             $('#saveChangesBtn').attr('disabled', 'disabled');
             $("#frmx").submit();
         }
-    });
-    google.maps.event.addDomListener(window, 'load', function () {
-        var places = new google.maps.places.Autocomplete(document.getElementById('userAddress'));
-        google.maps.event.addListener(places, 'place_changed', function () {
-            var place = places.getPlace();
-            var address = place.formatted_address;
-            var componentForm = {
-                street_number: 'short_name',
-                route: 'long_name',
-                locality: 'long_name',
-                administrative_area_level_1: 'short_name',
-                country: 'long_name',
-                postal_code: 'short_name'
-            };
-
-            var geoInfo = [];
-            for (var i = 0; i < place.address_components.length; i++) {
-                var addressType = place.address_components[i].types[0];
-                if (componentForm[addressType]) {
-                    geoInfo.push({ type: addressType, name: place.address_components[i][componentForm[addressType]]});
-                }
-            }
-            let geoAddress = '';
-            if(geoInfo.length) {
-                for(var j = 0; j < geoInfo.length; j++) {
-                    geoAddress += geoInfo[j].name + ', ';
-                    if(geoInfo[j].type == 'locality') {
-                        document.getElementById('userCity').value = geoInfo[j].name;
-                        document.getElementById('userCity').classList.add('valid');
-                        document.getElementById('userCity').classList.remove('onex-error');
-                        if(document.getElementById('userCity-error')) {
-                            document.getElementById('userCity-error').remove();
-                        }
-                    }
-                    if(geoInfo[j].type == 'administrative_area_level_1') {
-                        document.getElementById('userState').value = geoInfo[j].name;
-                        document.getElementById('userState').classList.add('valid');
-                        document.getElementById('userState').classList.remove('onex-error');
-                        if(document.getElementById('userState-error')) {
-                            document.getElementById('userState-error').remove();
-                        }
-                    }
-                    if(geoInfo[j].type == 'country') {
-                        document.getElementById('userCountry').value = geoInfo[j].name;
-                        document.getElementById('userCountry').classList.add('valid');
-                        document.getElementById('userCountry').classList.remove('onex-error');
-                        if(document.getElementById('userCountry-error')) {
-                            document.getElementById('userCountry-error').remove();
-                        }
-                    }
-                    if(geoInfo[j].type == 'postal_code') {
-                        document.getElementById('userPincode').value = geoInfo[j].name;
-                        document.getElementById('userPincode').classList.add('valid');
-                        document.getElementById('userPincode').classList.remove('onex-error');
-                        if(document.getElementById('userPincode-error')) {
-                            document.getElementById('userPincode-error').remove();
-                        }
-                    }
-                }
-            }
-            //console.log(geoInfo);
-            var latitude = place.geometry.location.lat();
-            var longitude = place.geometry.location.lng();
-            document.getElementById("latitude").value = latitude;
-            document.getElementById("longitude").value = longitude;
-            geoAddress += latitude + ', ' + longitude;
-            //console.log(geoAddress);
-            document.getElementById('geoAddress').value = geoAddress;
-        });
     });
 });
 </script>

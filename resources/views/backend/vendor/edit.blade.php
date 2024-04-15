@@ -1,46 +1,20 @@
 @extends('backend.layout.app')
 
-@section('page_header', 'User Management')
+@section('page_header', 'Vendor Management')
 @section('page_breadcrumb')
     <li class="breadcrumb-item"><a href="#">Home</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('user.index') }}">User Management</a></li>
-    <li class="breadcrumb-item active">Edit User</li>
+    <li class="breadcrumb-item"><a href="{{ route('vendor.index') }}">Vendor Management</a></li>
+    <li class="breadcrumb-item active">Edit Vendor</li>
 @endsection
 
-@section('content_title', 'Edit User')
+@section('content_title', 'Edit Vendor')
 @section('content_buttons')
-    <a href="{{ route('user.index') }}" class="btn btn-primary btn-sm"><i class="fas fa-users"></i> All Users</a>
+    <a href="{{ route('vendor.index') }}" class="btn btn-primary btn-sm"><i class="fas fa-users"></i> All Vendors</a>
 @endsection
 
 @section('content_body')
-<form name="frm" id="frmx" action="{{ route('user.update', array('id' => $user->id)) }}" method="POST">
+<form name="frm" id="frmx" action="{{ route('vendor.update', array('id' => $user->id)) }}" method="POST">
 @csrf
-
-@php
-    $editUserRoleIds = [];
-    if (!empty($user->userRoles) && count($user->userRoles)) {
-        foreach ($user->userRoles as $v) {
-            array_push($editUserRoleIds, $v->role_id);
-        }
-    }
-@endphp
-
-<div class="row">
-    <div class="col-md-4">
-        <div class="form-group">
-            <label for="userRole" class="onex-form-label">User Role: <em>*</em></label>
-            <select name="role_id" id="userRole" class="form-control onex-select2" required="required">
-                @if(!empty($roles) && count($roles))
-                    @foreach($roles as $k => $v)
-                        <option value="{{ $v->id }}" @if(in_array($v->id, $editUserRoleIds)) selected="selected" @endif>{{ $v->name }}</option>
-                    @endforeach
-                @endif
-            </select>
-        </div>
-    </div>
-    <div class="col-md-4"></div>
-    <div class="col-md-4"></div>
-</div>
 <div class="row">
     <div class="col-md-4">
         <div class="form-group">
@@ -77,16 +51,80 @@
             <input type="email" name="email_id" id="emailId" class="form-control" placeholder="Enter Email Id" required="required" autocomplete="new-email" value="{{ $user->email_id }}"/>
         </div>
     </div>
+    <div class="col-md-4"></div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <blockquote>
+            <p><strong>TAX Information</strong></p>
+        </blockquote>
+    </div>
+</div>
+<div class="row">
     <div class="col-md-4">
         <div class="form-group">
-            <label class="onex-form-label">System Access:</label>
-            <div class="form-check">
-                <input name="is_crm_access" id="isCrmAccess" class="form-check-input" type="checkbox" @if($user->is_crm_access == 1) checked="checked" @endif/>
-                <label class="form-check-label" for="isCrmAccess">Is able to access the CRM?</label>
-                <input type="hidden" name="crm_access_value" id="crmAccessValue" value="{{ $user->is_crm_access }}"/>
-            </div>
+            <label for="gstNo" class="onex-form-label">GST No:</label>
+            <input type="text" name="gst_no" id="gstNo" class="form-control" placeholder="Enter GST No" autocomplete="new-gst-no" value="{{ !empty($user->userProfile->gst_no) ? $user->userProfile->gst_no : '' }}"/>
         </div>
     </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="vatNo" class="onex-form-label">VAT No:</label>
+            <input type="text" name="vat_no" id="vatNo" class="form-control" placeholder="Enter VAT No" autocomplete="new-vat-no" value="{{ !empty($user->userProfile->vat_no) ? $user->userProfile->vat_no : '' }}"/>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <blockquote>
+            <p><strong>Address Information</strong></p>
+        </blockquote>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8">
+        <div class="form-group">
+            <label for="userAddress" class="onex-form-label">Full Address:</label>
+            <textarea name="full_address" id="userAddress" class="form-control" autocomplete="false" placeholder="Full Address">{{ !empty($user->userProfile->full_address) ? $user->userProfile->full_address : '' }}</textarea>
+        </div>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <div class="form-group">
+            <label for="userPincode" class="onex-form-label">Pincode:</label>
+            <input type="text" maxlength="10" name="pincode" id="userPincode" class="form-control" placeholder="Pincode" value="{{ !empty($user->userProfile->pincode) ? $user->userProfile->pincode : '' }}"/>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label for="userCity" class="onex-form-label">City:</label>
+            <input type="text" name="city" id="userCity" class="form-control" placeholder="City" value="{{ !empty($user->userProfile->city) ? $user->userProfile->city : '' }}"/>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label for="userState" class="onex-form-label">State:</label>
+            <input type="text" name="state" id="userState" class="form-control" placeholder="State" value="{{ !empty($user->userProfile->state) ? $user->userProfile->state : '' }}"/>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label for="userCountry" class="onex-form-label">Country:</label>
+            <input type="text" name="country" id="userCountry" class="form-control" placeholder="Country" value="{{ !empty($user->userProfile->country) ? $user->userProfile->country : 'IND' }}"/>
+        </div>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+<div class="row">
+    <div class="col-md-8">
+        <div class="form-group">
+            <label for="userLandmark" class="onex-form-label">Address Landmark: </label>
+            <input type="text" name="land_mark" id="userLandmark" class="form-control" placeholder="Landmark" value="{{ !empty($user->userProfile->land_mark) ? $user->userProfile->land_mark : '' }}" />
+        </div>
+    </div>
+    <div class="col-md-4"></div>
 </div>
 </form>
 @endsection
@@ -114,10 +152,6 @@ $(document).ready(function() {
         errorElement: 'div',
         ignore: '.ignore',
         rules: {
-            role_id: {
-                required: true,
-                digits: true
-            },
             first_name: {
                 required: true,
                 maxlength: 30
@@ -141,17 +175,9 @@ $(document).ready(function() {
                 digits: true,
                 maxlength: 10,
                 minlength: 10
-            },
-            crm_access_value: {
-                required: true,
-                digits: true
             }
         },
         messages: {
-            role_id: {
-                required: 'Please select user role',
-                digits: 'Invalid user role'
-            },
             first_name: {
                 required: 'Please enter first name',
                 maxlength: 'Maximum 30 chars accepted'
@@ -185,31 +211,6 @@ $(document).ready(function() {
             $("#frmx").submit();
         }
     });
-    $('#isCrmAccess').on('change', function() {
-        if($(this).is(':checked')) {
-            $('#crmAccessValue').val(1);
-        } else {
-            $('#crmAccessValue').val(0);
-        } 
-    });
-    $('#userRole').on('change', function() {
-        if($(this).val() == '1' || $(this).val() == '2') {
-            $('#isCrmAccess').prop('checked', true);
-            $('#isCrmAccess').attr('checked');
-            $('#isCrmAccess').attr('disabled', 'disabled');
-        } else {
-            $('#isCrmAccess').prop('checked', true);
-            $('#isCrmAccess').attr('checked');
-            $('#isCrmAccess').removeAttr('disabled');
-        }
-        $('#isCrmAccess').trigger('change');
-    });
-    if($('#userRole').val() == '1' || $('#userRole').val() == '2') {
-        $('#isCrmAccess').prop('checked', true);
-        $('#isCrmAccess').attr('checked');
-        $('#isCrmAccess').attr('disabled', 'disabled');
-        $('#isCrmAccess').trigger('change');
-    }
 });
 </script>
 @endpush

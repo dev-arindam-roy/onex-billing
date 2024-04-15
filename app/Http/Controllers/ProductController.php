@@ -413,6 +413,7 @@ class ProductController extends Controller
         $dataBag = [];
         $dataBag['sidebar_parent'] = 'product_management';
         $dataBag['sidebar_child'] = 'productvariants';
+        $pagination = !empty($request->get('pagination')) ? $request->get('pagination') : 25; 
         
         $searchProductName = ($request->has('variant_name') && !empty($request->get('variant_name'))) ? $request->get('variant_name') : null; 
         $dataBag['data'] = ProductVariants::with(['baseProduct', 'productUnit', 'productBrand'])
@@ -421,7 +422,7 @@ class ProductController extends Controller
             })
             ->where('status', '!=', 3)
             ->orderBy('id', 'desc')
-            ->paginate(25);
+            ->paginate($pagination);
         
         if ($request->ajax()) {
             return view('backend.product.all-variants-render', $dataBag);

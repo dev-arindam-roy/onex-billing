@@ -22,7 +22,7 @@
                     <p>Dashboard</p>
                 </a>
             </li>
-            @if(Helper::canAccess(array('super-admin')))
+            @if(Helper::canAccess(array('super-admin', 'admin')))
             <li class="nav-item @if(!empty($sidebar_parent) && $sidebar_parent == 'user_management') menu-open @endif">
                 <a href="#" class="nav-link @if(!empty($sidebar_parent) && $sidebar_parent == 'user_management') active @endif">
                     <i class="nav-icon fas fa-users"></i>
@@ -30,32 +30,104 @@
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
-                        <a href="{{ route('user.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'users') active @endif">
+                        <a href="{{ route('user.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'all-users') active @endif">
                             <i class="far fa-circle nav-icon"></i>
                             <p>All Users</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('user.vendor.allVendors') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'vendors') active @endif">
+                        <a href="{{ route('user.add') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'add-user') active @endif">
                             <i class="far fa-circle nav-icon"></i>
-                            <p>All Vendors</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('user.customer.allCustomer') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'customers') active @endif">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>All Customers</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('user.salesman.allSalesman') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'salesmans') active @endif">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>All Salesmans</p>
+                            <p>Add User</p>
                         </a>
                     </li>
                 </ul>
             </li>
             @endif
+            @if(Helper::canAccess(array('super-admin', 'admin')))
+            <li class="nav-item @if(!empty($sidebar_parent) && $sidebar_parent == 'vendor_management') menu-open @endif">
+                <a href="#" class="nav-link @if(!empty($sidebar_parent) && $sidebar_parent == 'vendor_management') active @endif">
+                    <i class="nav-icon fas fa-user-shield"></i>
+                    <p>Vendor Management<i class="right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route('vendor.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'all-vendors') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>All Vendors</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('vendor.add') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'add-vendor') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Add Vendor</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            @endif
+            @if(Helper::canAccess(array('super-admin', 'admin')))
+            <li class="nav-item @if(!empty($sidebar_parent) && $sidebar_parent == 'customer_management') menu-open @endif">
+                <a href="#" class="nav-link @if(!empty($sidebar_parent) && $sidebar_parent == 'customer_management') active @endif">
+                    <i class="nav-icon fas fa-user-tag"></i>
+                    <p>Customer Management<i class="right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route('customer.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'all-customers') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>All Customers</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('customer.add') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'add-customer') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Add Customer</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            @endif
+            <li class="nav-item @if(!empty($sidebar_parent) && $sidebar_parent == 'customer_management') menu-open @endif">
+                <a href="#" class="nav-link @if(!empty($sidebar_parent) && $sidebar_parent == 'customer_management') active @endif">
+                    <i class="nav-icon fas fa-shopping-bag"></i>
+                    <p>Purchase Management<i class="right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route('customer.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'all-customers') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>All Customers</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('customer.add') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'add-customer') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Add Customer</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item @if(!empty($sidebar_parent) && $sidebar_parent == 'customer_management') menu-open @endif">
+                <a href="#" class="nav-link @if(!empty($sidebar_parent) && $sidebar_parent == 'customer_management') active @endif">
+                    <i class="nav-icon fas fa-shopping-cart"></i>
+                    <p>Sale Management<i class="right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route('customer.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'all-customers') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>All Customers</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('customer.add') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'add-customer') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Add Customer</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
             <li class="nav-item @if(!empty($sidebar_parent) && $sidebar_parent == 'stock_management') menu-open @endif">
                 <a href="#" class="nav-link @if(!empty($sidebar_parent) && $sidebar_parent == 'stock_management') active @endif">
                     <i class="nav-icon fas fa-layer-group"></i>
@@ -78,6 +150,26 @@
                         <a href="{{ route('stock.report') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'stock-report') active @endif">
                             <i class="far fa-circle nav-icon"></i>
                             <p>Report</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item @if(!empty($sidebar_parent) && $sidebar_parent == 'customer_management') menu-open @endif">
+                <a href="#" class="nav-link @if(!empty($sidebar_parent) && $sidebar_parent == 'customer_management') active @endif">
+                    <i class="nav-icon fas fa-passport"></i>
+                    <p>Report Management<i class="right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route('customer.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'all-customers') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>All Customers</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('customer.add') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'add-customer') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Add Customer</p>
                         </a>
                     </li>
                 </ul>
