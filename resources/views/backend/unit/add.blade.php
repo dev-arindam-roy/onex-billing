@@ -39,6 +39,30 @@
     </div>
     <div class="col-md-6"></div>
 </div>
+@if(count($all_units))
+<div class="row">
+    <div class="col-md-12">
+        <blockquote>
+            <p>Sub Unit / Child Unit</p>
+        </blockquote>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <label for="childUnitValue" class="onex-form-label">Unit Value: </label>
+        <input type="number" name="child_unit_value" id="childUnitValue" class="form-control" placeholder="Enter Child Unit" />
+    </div>
+    <div class="col-md-3">
+        <label for="childUnitId" class="onex-form-label">Unit Value: </label>
+        <select name="child_unit_id" id="childUnitId" class="form-control onex-select2">
+            <option value=""></option>
+            @foreach($all_units as $k => $v)
+                <option value="{{ $v->id }}">{{ $v->name }} ({{ $v->short_name }})</option>
+            @endforeach
+        </select>
+    </div>
+</div>
+@endif
 </form>
 @endsection
 
@@ -70,6 +94,30 @@ $(document).ready(function() {
             short_name: {
                 required: true,
                 maxlength: 10
+            },
+            child_unit_value: {
+                required: {
+                    depends: function(element) {
+                        if($('#childUnitId').val() != '') {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                },
+                digits: true
+            },
+            child_unit_id: {
+                required: {
+                    depends: function(element) {
+                        if($('#childUnitValue').val() != '') {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                },
+                digits: true
             }
         },
         messages: {
@@ -80,6 +128,14 @@ $(document).ready(function() {
             short_name: {
                 required: 'Please enter short name',
                 maxlength: 'Maximum 10 chars accepted'
+            },
+            child_unit_value: {
+                required: 'Please enter unit value',
+                digits: 'Please enter number'
+            },
+            child_unit_id: {
+                required: 'Please select an unit',
+                digits: 'Invalid unit'
             }
         },
         errorPlacement: function (error, element) {

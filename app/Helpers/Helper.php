@@ -81,14 +81,6 @@ class Helper {
         return rand(11, 99) . $str; 
     }
 
-    public static function cartUniqueId()
-    {
-        $maxId = DB::table('cart_master')->max('id');
-        $maxId = $maxId + rand(111, 999);
-        $str = str_pad($maxId, 6, 0, STR_PAD_LEFT);
-        return rand(11, 99) . $str; 
-    }
-
     public function generateRandomString($length = 10) 
     {
         $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -175,6 +167,13 @@ class Helper {
         $result = $result . "Rupees "; 
         $points = ((!empty($points) && $points > 0)) ? "and " . $points . " Paise" : '';
         return $result . $points;
+    }
+
+    public static function createProductBarcodeNo()
+    {
+        $maxId = DB::table('product_variants')->max('id');
+        $maxId = $maxId + rand(111, 999);
+        return 'PU' . str_pad($maxId, 10, 0, STR_PAD_LEFT);
     }
 
 }

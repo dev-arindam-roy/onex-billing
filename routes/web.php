@@ -15,6 +15,8 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProcurementController;
 use App\Http\Controllers\ProductStockController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\BarcodeController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -218,6 +220,17 @@ Route::prefix('auth')->group(function () {
                     });
                 });
             });
+
+            Route::prefix('barcode')->group(function () {
+                Route::name('barcode.')->group(function () {
+                    Route::controller(BarcodeController::class)->group(function () {
+                        Route::get('/products', 'productIndex')->name('product.index');
+                        Route::post('/products', 'productCreate')->name('product.create');
+                        Route::get('/batches', 'batchIndex')->name('batch.index');
+                        Route::post('/batches', 'batchCreate')->name('batch.create');
+                    });
+                });
+            });
             
             Route::group(['middleware' => ['accessRoles:super-admin']], function() {
                 Route::prefix('theme-settings')->group(function () {
@@ -233,6 +246,15 @@ Route::prefix('auth')->group(function () {
                         Route::controller(CrmSettingsController::class)->group(function () {
                             Route::get('/', 'index')->name('index');
                             Route::post('/add', 'saveChanges')->name('save');
+                        });
+                    });
+                });
+                Route::prefix('company')->group(function () {
+                    Route::name('company.')->group(function () {
+                        Route::controller(CompanyController::class)->group(function () {
+                            Route::get('/', 'index')->name('registration');
+                            Route::post('/save', 'saveChanges')->name('registration.save');
+                            Route::post('/delete', 'deleteInformation')->name('registration.delete');
                         });
                     });
                 });

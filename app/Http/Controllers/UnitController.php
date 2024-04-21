@@ -17,7 +17,9 @@ class UnitController extends Controller
         $dataBag = [];
         $dataBag['sidebar_parent'] = 'product_management';
         $dataBag['sidebar_child'] = 'units';
-        $dataBag['all_units'] = Unit::where('status', '!=', 3)->orderBy('name', 'asc')->get();
+        $dataBag['all_units'] = Unit::with(['subUnit' => function ($qry) {
+            $qry->select('id', 'name', 'short_name');
+        }])->where('status', '!=', 3)->orderBy('name', 'asc')->get();
         return view('backend.unit.index', $dataBag);
     }
 
@@ -26,6 +28,7 @@ class UnitController extends Controller
         $dataBag = [];
         $dataBag['sidebar_parent'] = 'product_management';
         $dataBag['sidebar_child'] = 'units';
+        $dataBag['all_units'] = Unit::select('id','name','short_name')->where('status', '!=', 3)->orderBy('name', 'asc')->get();
         return view('backend.unit.add', $dataBag);
     }
 
@@ -53,6 +56,8 @@ class UnitController extends Controller
         $unit->name = $name;
         $unit->short_name = $shortName;
         $unit->description = $request->input('description');
+        $unit->child_unit_value = !empty($request->child_unit_value) ? $request->child_unit_value : null;
+        $unit->child_unit_id = !empty($request->child_unit_id) ? $request->child_unit_id : null;
         if ($unit->save()) {
             return redirect()->back()
                 ->with('message_type', 'success')
@@ -83,6 +88,7 @@ class UnitController extends Controller
         $dataBag['sidebar_parent'] = 'product_management';
         $dataBag['sidebar_child'] = 'units';
         $dataBag['unit'] = Unit::findOrFail($id);
+        $dataBag['all_units'] = Unit::select('id','name','short_name')->where('status', '!=', 3)->orderBy('name', 'asc')->get();
         return view('backend.unit.edit', $dataBag);
     }
 
@@ -111,6 +117,8 @@ class UnitController extends Controller
         $unit->short_name = $shortName;
         $unit->status = $request->input('status');
         $unit->description = $request->input('description');
+        $unit->child_unit_value = !empty($request->child_unit_value) ? $request->child_unit_value : null;
+        $unit->child_unit_id = !empty($request->child_unit_id) ? $request->child_unit_id : null;
         if ($unit->save()) {
             return redirect()->back()
                 ->with('message_type', 'success')

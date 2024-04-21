@@ -167,6 +167,8 @@ $(document).ready(function() {
             displayLoading();
             $('#addProductBtn').attr('disabled', 'disabled');
             $("#frmx").submit();
+        } else {
+            displayAlert('error', 'Oops!', 'Please check all the required fields');
         }
     });
     $('#categoryId').on('change', function() {

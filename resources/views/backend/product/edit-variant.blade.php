@@ -19,6 +19,27 @@
 @section('content_body')
 <form name="frm" id="frmx" action="{{ route('product.variant.updateVariants', array('id' => $product->id)) }}" method="POST" enctype="multipart/form-data">
 @csrf
+
+@if(!empty($product->barcode_no))
+<div class="row">
+    <div class="col-md-6 svg-barcode-container">
+        {!! DNS1D::getBarcodeSVG($product->barcode_no, 'C39+', 2, 45, 'black', true) !!}
+    </div>
+    <div class="col-md-6">
+        <div class="dropdown">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                <i class="fas fa-download"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="javascript:void(0);" onclick="downloadSVGAsText();">Download As SVG</a>
+                <a class="dropdown-item" href="javascript:void(0);" onclick="downloadSVGAsPNG();">Download As PNG</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12"><hr/></div>
+</div>
+@endif
+
 <div class="row">
     <div class="col-md-4">
         <div class="form-group">
@@ -29,7 +50,13 @@
             </select>
         </div>
     </div>
-    <div class="col-md-8"></div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="barcodeNo" class="onex-form-label">Barcode No:</label>
+            <input type="text" name="barcode_no" id="barcodeNo" class="form-control" placeholder="Barcode Number" readonly @if(!empty($product->barcode_no)) value="{{ $product->barcode_no }}" @endif />
+        </div>
+    </div>
+    <div class="col-md-4"></div>
 </div>
 <div class="row">
     <div class="col-md-4">
@@ -427,5 +454,42 @@ $(document).ready(function() {
         calculateProductPrice($(this));
     });
 });
+function downloadSVGAsText() {
+    const svg = document.querySelector('svg');
+    const base64doc = btoa(unescape(encodeURIComponent(svg.outerHTML)));
+    const a = document.createElement('a');
+    const e = new MouseEvent('click');
+    a.download = document.getElementById('barcodeNo').value + '.svg';
+    a.href = 'data:image/svg+xml;base64,' + base64doc;
+    a.dispatchEvent(e);
+}
+function downloadSVGAsPNG(e){
+    const canvas = document.createElement("canvas");
+    const svg = document.querySelector('svg');
+    const base64doc = btoa(unescape(encodeURIComponent(svg.outerHTML)));
+    const w = parseInt(svg.getAttribute('width'));
+    const h = parseInt(svg.getAttribute('height'));
+    const img_to_download = document.createElement('img');
+    img_to_download.src = 'data:image/svg+xml;base64,' + base64doc;
+    img_to_download.onload = function () {    
+        canvas.setAttribute('width', w);
+        canvas.setAttribute('height', h);
+        const context = canvas.getContext("2d");
+        //context.clearRect(0, 0, w, h);
+        context.drawImage(img_to_download,0,0,w,h);
+        const dataURL = canvas.toDataURL('image/png');
+        if (window.navigator.msSaveBlob) {
+        window.navigator.msSaveBlob(canvas.msToBlob(), document.getElementById('barcodeNo').value + ".png");
+        e.preventDefault();
+        } else {
+        const a = document.createElement('a');
+        const my_evt = new MouseEvent('click');
+        a.download = document.getElementById('barcodeNo').value + ".png";
+        a.href = dataURL;
+        a.dispatchEvent(my_evt);
+        }
+        //canvas.parentNode.removeChild(canvas);
+    }  
+}
 </script>
 @endpush

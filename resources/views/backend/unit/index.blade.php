@@ -27,6 +27,7 @@
                         <th style="width: 40px;">SL</th>
                         <th>Unit Name</th>
                         <th>Short Name</th>
+                        <th>Sub Unit</th>
                         <th>Status</th>
                         <th>Created</th>
                         <th style="width: 60px;">Action</th>
@@ -40,6 +41,12 @@
                             <td>{{ $sl }}</td>
                             <td>{{ $value->name }}</td>
                             <td>{{ $value->short_name }}</td>
+                            <td>
+                                {{ $value->child_unit_value }}
+                                @if(!empty($value->subUnit) && !empty($value->subUnit->short_name))
+                                    {{ $value->subUnit->short_name }}
+                                @endif
+                            </td>
                             <td>{!! ($value->status == 1) ? '<span class="text-success">Active</span>' : '<span class="text-danger">Inactive</span>' !!}</td>
                             <td>{{ date('d-m-Y', strtotime($value->created_at)) }}</td>
                             <td>
@@ -57,7 +64,8 @@
                         <td style="display:none;"></td>
                         <td style="display:none;"></td>
                         <td style="display:none;"></td>
-                        <td colspan="5">No unis found. Please add unit</td>
+                        <td style="display:none;"></td>
+                        <td colspan="6">No unis found. Please add unit</td>
                     </tr>
                 @endif
                 </tbody>

@@ -45,6 +45,11 @@ select.form-control-sm~.select2-container--default .select2-selection--single .s
     font-weight: 400;
 }
 
+.select2-selection__clear {
+    margin-top: 2px;
+    color: #dc3545;
+}
+
 label em,
 .onex-error,
 .onex-error-label {
@@ -234,4 +239,9 @@ table tbody td {
 .fix-tab-cell-left {
     position: sticky;
     left: -1px;
+}
+.svg-barcode-container text {
+    font-size: 14px !important;
+    letter-spacing: 5px;
+    font-weight: 600;
 }

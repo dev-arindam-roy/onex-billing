@@ -1,6 +1,7 @@
 $(document).ready(function() {
     $('.onex-select2').select2({
         width: '100%',
+        allowClear: true,
         placeholder: 'Select an option',
         dropdownPosition: 'below'
     });

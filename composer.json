@@ -16,7 +16,7 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "laravel/ui": "3.4",
-        "milon/barcode": "^10.0",
+        "milon/barcode": "^8.0",
         "simplesoftwareio/simple-qrcode": "~4",
         "stevebauman/location": "^7.0"
     },

@@ -154,6 +154,26 @@
                     </li>
                 </ul>
             </li>
+            <li class="nav-item @if(!empty($sidebar_parent) && $sidebar_parent == 'barcode_management') menu-open @endif">
+                <a href="#" class="nav-link @if(!empty($sidebar_parent) && $sidebar_parent == 'barcode_management') active @endif">
+                    <i class="nav-icon fas fa-barcode"></i>
+                    <p>Barcode Management<i class="right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route('barcode.product.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'product-barcode') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Create Product Barcode</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('barcode.batch.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'batch-barcode') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Create Batch Barcode</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
             <li class="nav-item @if(!empty($sidebar_parent) && $sidebar_parent == 'customer_management') menu-open @endif">
                 <a href="#" class="nav-link @if(!empty($sidebar_parent) && $sidebar_parent == 'customer_management') active @endif">
                     <i class="nav-icon fas fa-passport"></i>
@@ -233,6 +253,12 @@
                 <a href="{{ route('crm.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'crm') active @endif">
                     <i class="nav-icon far fa-circle text-warning"></i>
                     <p>CRM Settings</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('company.registration') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'company') active @endif">
+                    <i class="nav-icon far fa-circle text-success"></i>
+                    <p>Company Settings</p>
                 </a>
             </li>
             @endif

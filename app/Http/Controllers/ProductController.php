@@ -13,6 +13,7 @@ use App\Models\ProductSubCategories;
 use App\Models\ProductVariants;
 use App\Models\ProductBundleFree;
 use Session;
+use Helper;
 use Image;
 use Hash;
 use Auth;
@@ -456,6 +457,7 @@ class ProductController extends Controller
 
         $obj = new ProductVariants();
         $obj->sku = $sku;
+        $obj->barcode_no = Helper::createProductBarcodeNo(); 
         $obj->product_id = $request->input('product_id');
         $obj->name = $request->input('name');
         $obj->description = !empty($request->input('description')) ? htmlentities(trim($request->input('description')), ENT_QUOTES ) : NULL;
