@@ -17,6 +17,7 @@ use App\Http\Controllers\ProcurementController;
 use App\Http\Controllers\ProductStockController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\BarcodeController;
+use App\Http\Controllers\PurchaseController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -51,6 +52,7 @@ Route::prefix('auth')->group(function () {
                         Route::post('remove-table-image', 'removeTableImage')->name('removeTableImage');
                         Route::get('users', 'getUsers')->name('getUsers');
                         Route::get('products', 'getProducts')->name('getProducts');
+                        
                     });
                 });
             });
@@ -217,6 +219,25 @@ Route::prefix('auth')->group(function () {
                         Route::get('/out', 'stockOutIndex')->name('out');
                         Route::get('/out/add', 'outStock')->name('out-add');
                         Route::post('/out/save', 'saveOutStock')->name('out-save');
+                    });
+                });
+            });
+
+            Route::prefix('purchase')->group(function () {
+                Route::name('purchase.')->group(function () {
+                    Route::controller(PurchaseController::class)->group(function () {
+                        /* Each Product Purchase */
+                        Route::get('/', 'index')->name('all-purchases');
+                        Route::get('/add', 'add')->name('add-purchase');
+                        Route::post('/add', 'save')->name('save-purchase');
+                        
+                        /* Batches */
+                        Route::get('/batches', 'batchIndex')->name('all-batches');
+                        Route::get('/batches/add', 'addBatch')->name('add-batch');
+                        Route::post('/batches/add', 'saveBatch')->name('save-batch');
+                        Route::get('/batches/edit/{id}', 'editBatch')->name('edit-batch');
+                        Route::post('/batches/edit/{id}', 'updateBatch')->name('update-batch');
+                        Route::get('/batches/delete/{id}', 'deleteBatch')->name('delete-batch');
                     });
                 });
             });

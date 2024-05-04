@@ -24,7 +24,9 @@
 <div class="register-box">
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <img src="{{ asset('public') }}/images/logo-sigin-256.png" alt="{{ $defaultShareData['crm']->name }}" class="signin-logo">
+      <div class="text-center">
+        <img src="{{ asset('public') }}/images/logo-sigin-256.png" alt="{{ $defaultShareData['crm']->name }}" class="signin-logo">
+      </div>
       <a href="javascript:void(0);" class="h1" style="font-size: 32px;"><b>{{ $defaultShareData['crm']->name }}</b></a>
     </div>
     <div class="card-body">

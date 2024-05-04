@@ -176,4 +176,11 @@ class Helper {
         return 'PU' . str_pad($maxId, 10, 0, STR_PAD_LEFT);
     }
 
+    public static function createBatchNo()
+    {
+        $maxId = DB::table('batches')->max('id');
+        $maxId = $maxId + rand(11, 99);
+        return 'BC' . date('Ym') . '-' . str_pad($maxId, 6, 0, STR_PAD_LEFT);
+    }
+
 }

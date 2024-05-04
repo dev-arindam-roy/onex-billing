@@ -9,9 +9,9 @@
 <!-- Sidebar -->
 <div class="sidebar" style="margin-bottom: 16px;">
     <!-- Vendor Logo -->
-    {{--<div class="mt-3 pb-3 mb-3 d-flex justify-content-center" style="border-bottom: 1px solid #ddd;">
-        <img src="{{ asset('public/images/onex-crm-logo2.png') }}" class="img-fluid" style="max-height: 96px;">
-    </div>--}}
+    <div class="mt-3 pb-3 mb-3 d-flex justify-content-center" style="border-bottom: 1px solid #ddd;">
+        <img src="{{ asset('public/images/client_logo.jpeg') }}" class="img-fluid" style="max-height: 96px; border-radius: 10px; border-radius: 2px solid #ccc;">
+    </div>
 
     <!-- Sidebar Menu -->
     <nav class="mt-3">
@@ -22,6 +22,56 @@
                     <p>Dashboard</p>
                 </a>
             </li>
+
+            @if(Helper::canAccess(array('super-admin', 'admin')))
+            <li class="nav-header">MASTER ENTRIES</li>
+            <li class="nav-item @if(!empty($sidebar_parent) && $sidebar_parent == 'product_management') menu-open @endif">
+                <a href="#" class="nav-link @if(!empty($sidebar_parent) && $sidebar_parent == 'product_management') active @endif">
+                    <i class="nav-icon fas fa-cubes"></i>
+                    <p>Product Management<i class="right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route('unit.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'units') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Units</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('brand.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'brands') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Brands</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('product.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'products') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Products</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('product.variant.allVariants') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'productvariants') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Product Variants</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('product.category.allCategories') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'categories') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Categories</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('product.subcategory.allSubCategories') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'subcategories') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Subcategories</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            @endif
+
+            <li class="nav-header">SYSTEM USERS</li>
             @if(Helper::canAccess(array('super-admin', 'admin')))
             <li class="nav-item @if(!empty($sidebar_parent) && $sidebar_parent == 'user_management') menu-open @endif">
                 <a href="#" class="nav-link @if(!empty($sidebar_parent) && $sidebar_parent == 'user_management') active @endif">
@@ -88,22 +138,30 @@
                 </ul>
             </li>
             @endif
-            <li class="nav-item @if(!empty($sidebar_parent) && $sidebar_parent == 'customer_management') menu-open @endif">
-                <a href="#" class="nav-link @if(!empty($sidebar_parent) && $sidebar_parent == 'customer_management') active @endif">
+
+            <li class="nav-header">SALES & PURCHASE</li>
+            <li class="nav-item @if(!empty($sidebar_parent) && $sidebar_parent == 'purchase_management') menu-open @endif">
+                <a href="#" class="nav-link @if(!empty($sidebar_parent) && $sidebar_parent == 'purchase_management') active @endif">
                     <i class="nav-icon fas fa-shopping-bag"></i>
                     <p>Purchase Management<i class="right fas fa-angle-left"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
-                        <a href="{{ route('customer.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'all-customers') active @endif">
+                        <a href="{{ route('purchase.all-purchases') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'all-purchases') active @endif">
                             <i class="far fa-circle nav-icon"></i>
-                            <p>All Customers</p>
+                            <p>All Purchases</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('customer.add') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'add-customer') active @endif">
+                        <a href="{{ route('purchase.add-purchase') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'add-purchase') active @endif">
                             <i class="far fa-circle nav-icon"></i>
-                            <p>Add Customer</p>
+                            <p>Add Purchase</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('purchase.all-batches') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'all-batches') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>All Batches</p>
                         </a>
                     </li>
                 </ul>
@@ -114,7 +172,7 @@
                     <p>Sale Management<i class="right fas fa-angle-left"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
-                    <li class="nav-item">
+                    {{--<li class="nav-item">
                         <a href="{{ route('customer.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'all-customers') active @endif">
                             <i class="far fa-circle nav-icon"></i>
                             <p>All Customers</p>
@@ -125,16 +183,17 @@
                             <i class="far fa-circle nav-icon"></i>
                             <p>Add Customer</p>
                         </a>
-                    </li>
+                    </li>--}}
                 </ul>
             </li>
+            <li class="nav-header">PRODUCT STOCK</li>
             <li class="nav-item @if(!empty($sidebar_parent) && $sidebar_parent == 'stock_management') menu-open @endif">
                 <a href="#" class="nav-link @if(!empty($sidebar_parent) && $sidebar_parent == 'stock_management') active @endif">
                     <i class="nav-icon fas fa-layer-group"></i>
                     <p>Stock Management<i class="right fas fa-angle-left"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
-                    <li class="nav-item">
+                    {{--<li class="nav-item">
                         <a href="{{ route('stock.in') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'stock-in') active @endif">
                             <i class="far fa-circle nav-icon"></i>
                             <p>Stock-In</p>
@@ -151,7 +210,7 @@
                             <i class="far fa-circle nav-icon"></i>
                             <p>Report</p>
                         </a>
-                    </li>
+                    </li>--}}
                 </ul>
             </li>
             <li class="nav-item @if(!empty($sidebar_parent) && $sidebar_parent == 'barcode_management') menu-open @endif">
@@ -174,13 +233,15 @@
                     </li>
                 </ul>
             </li>
+
+            <li class="nav-header">CRM REPORTS</li>
             <li class="nav-item @if(!empty($sidebar_parent) && $sidebar_parent == 'customer_management') menu-open @endif">
                 <a href="#" class="nav-link @if(!empty($sidebar_parent) && $sidebar_parent == 'customer_management') active @endif">
                     <i class="nav-icon fas fa-passport"></i>
                     <p>Report Management<i class="right fas fa-angle-left"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
-                    <li class="nav-item">
+                    {{--<li class="nav-item">
                         <a href="{{ route('customer.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'all-customers') active @endif">
                             <i class="far fa-circle nav-icon"></i>
                             <p>All Customers</p>
@@ -191,56 +252,10 @@
                             <i class="far fa-circle nav-icon"></i>
                             <p>Add Customer</p>
                         </a>
-                    </li>
+                    </li>--}}
                 </ul>
             </li>
-            @if(Helper::canAccess(array('super-admin', 'admin')))
-            <li class="nav-header">MASTER ENTRIES</li>
-            <li class="nav-item @if(!empty($sidebar_parent) && $sidebar_parent == 'product_management') menu-open @endif">
-                <a href="#" class="nav-link @if(!empty($sidebar_parent) && $sidebar_parent == 'product_management') active @endif">
-                    <i class="nav-icon fas fa-cubes"></i>
-                    <p>Product Management<i class="right fas fa-angle-left"></i></p>
-                </a>
-                <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                        <a href="{{ route('unit.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'units') active @endif">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Units</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('brand.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'brands') active @endif">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Brands</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('product.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'products') active @endif">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Products</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('product.variant.allVariants') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'productvariants') active @endif">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Product Variants</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('product.category.allCategories') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'categories') active @endif">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Categories</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('product.subcategory.allSubCategories') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'subcategories') active @endif">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Subcategories</p>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            @endif
+            
             @if(Helper::canAccess(array('super-admin')))
             <li class="nav-header">SETTINGS</li>
             <li class="nav-item">
