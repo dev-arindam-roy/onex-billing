@@ -366,7 +366,7 @@ $(document).ready(function() {
                 <td>0.00</td>
                 <td>0.00</td>
                 <td>0.00</td>
-                <td><i class="fas fa-trash-alt text-danger disabled"></i></td>
+                <td><i class="fas fa-trash-alt" style="color: #a5a5a5;"></i></td>
             </tr>
             <tr class="dummy-tr">
                 <td>2.</td>
@@ -377,7 +377,7 @@ $(document).ready(function() {
                 <td>0.00</td>
                 <td>0.00</td>
                 <td>0.00</td>
-                <td><i class="fas fa-trash-alt text-danger disabled"></i></td>
+                <td><i class="fas fa-trash-alt" style="color: #a5a5a5;"></i></td>
             </tr>
         `);
     }
