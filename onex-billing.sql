@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 04, 2024 at 04:46 PM
+-- Generation Time: May 18, 2024 at 08:45 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.5
 
@@ -43,9 +43,12 @@ CREATE TABLE `batches` (
 
 INSERT INTO `batches` (`id`, `batch_no`, `name`, `description`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'BC202405-000047', 'Batch-1', 'Batch one', 3, '2024-05-01 07:06:02', '2024-05-01 07:17:55'),
-(2, 'BC202405-000054', 'Batch-2', NULL, 3, '2024-05-01 07:06:11', '2024-05-01 07:17:50'),
+(2, 'BC202405-000054', 'Batch-2', NULL, 1, '2024-05-01 07:06:11', '2024-05-01 07:17:50'),
 (3, 'BC202405-000074', 'Batch 10', NULL, 1, '2024-05-01 07:18:04', '2024-05-01 07:30:45'),
-(4, 'BC202405-000040', 'Batch May - Sharma Ji', NULL, 1, '2024-05-01 07:18:20', '2024-05-01 07:30:34');
+(4, 'BC202405-000040', 'Batch May - Sharma Ji', NULL, 1, '2024-05-01 07:18:20', '2024-05-01 07:30:34'),
+(5, 'BC202405-000092', 'HelloBatch', NULL, 1, '2024-05-04 15:11:15', '2024-05-04 15:11:15'),
+(6, 'BC202405-000050', 'onex1', NULL, 1, '2024-05-18 09:02:34', '2024-05-18 09:02:34'),
+(7, 'BC202405-000039', 'onex2', NULL, 1, '2024-05-18 09:02:39', '2024-05-18 09:02:39');
 
 -- --------------------------------------------------------
 
@@ -70,8 +73,12 @@ CREATE TABLE `batch_products` (
 --
 
 INSERT INTO `batch_products` (`id`, `batch_id`, `product_id`, `product_qty`, `purchase_price`, `sale_price`, `status`, `created_at`, `updated_at`) VALUES
-(1, 4, 3, 20, 200.00, 260.00, 1, '2024-05-01 18:00:26', '2024-05-01 18:00:26'),
-(2, 4, 4, 35, 345.00, 567.00, 1, '2024-05-01 18:00:56', '2024-05-01 18:00:56');
+(1, 4, 3, 60, 50.00, 120.00, 1, '2024-05-01 18:00:26', '2024-05-18 08:46:53'),
+(2, 4, 4, 35, 345.00, 567.00, 1, '2024-05-01 18:00:56', '2024-05-01 18:00:56'),
+(3, 3, 3, 12, 230.00, 456.00, 1, '2024-05-16 09:54:08', '2024-05-18 09:01:32'),
+(4, 5, 5, 636, 6.00, 9.00, 1, '2024-05-18 07:16:27', '2024-05-18 07:59:13'),
+(5, 5, 2, 78, 90.00, 100.00, 1, '2024-05-18 07:59:40', '2024-05-18 07:59:40'),
+(6, 4, 1, 0, 78.00, 130.00, 3, '2024-05-18 08:12:50', '2024-05-18 08:45:41');
 
 -- --------------------------------------------------------
 
@@ -366,10 +373,11 @@ CREATE TABLE `product_variants` (
 --
 
 INSERT INTO `product_variants` (`id`, `product_id`, `brand_id`, `name`, `sku`, `barcode_no`, `short_description`, `description`, `offer_text`, `unit_id`, `price`, `old_price`, `percentage_discount`, `flat_discount`, `hsn_code`, `gst_rate`, `image`, `is_bundle_product`, `have_free_product`, `rating_count`, `view_count`, `available_stock`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 3, 'Bata Official Men Star', 'BATA-OFFICIAL-MEN-STAR', 'PU0000000958', NULL, NULL, NULL, 3, 0.00, 0.00, 0.00, 0.00, NULL, 0.00, NULL, 0, 0, 0.00, 0, 0.00, 1, '2024-04-21 09:30:03', '2024-04-21 09:30:03'),
+(1, 1, 3, 'Bata Official Men Star', 'BATA-OFFICIAL-MEN-STAR', 'PU0000000958', NULL, NULL, NULL, 3, 0.00, 0.00, 0.00, 0.00, NULL, 0.00, NULL, 0, 0, 0.00, 0, 0.00, 1, '2024-04-21 09:30:03', '2024-05-18 08:45:41'),
 (2, 3, 2, 'School Shoes For Boys', 'KHDM-SCLBOY', 'PU0000000710', NULL, NULL, NULL, 3, 0.00, 0.00, 0.00, 0.00, NULL, 0.00, NULL, 0, 0, 0.00, 0, 0.00, 1, '2024-04-21 09:31:32', '2024-04-21 09:31:32'),
-(3, 3, 3, 'New Age Bata School Shoes', 'NBATASC001', 'PU0000000953', NULL, NULL, NULL, 3, 490.00, 580.00, 15.52, 90.00, 'XXX123', 18.00, 'product_image__1713802010.png', 0, 0, 0.00, 0, 0.00, 1, '2024-04-22 16:06:52', '2024-04-22 16:06:52'),
-(4, 3, 4, 'Kids 1000 Black Size 6', 'KID10001', 'PU0000000370', NULL, NULL, NULL, 3, 375.00, 500.00, 25.00, 125.00, 'X11100101', 18.00, NULL, 0, 0, 0.00, 0, 0.00, 1, '2024-04-29 17:16:39', '2024-04-29 17:16:39');
+(3, 3, 3, 'New Age Bata School Shoes', 'NBATASC001', 'PU0000000953', NULL, NULL, NULL, 3, 490.00, 580.00, 15.52, 90.00, 'XXX123', 18.00, 'product_image__1713802010.png', 0, 0, 0.00, 0, 60.00, 1, '2024-04-22 16:06:52', '2024-05-18 08:46:53'),
+(4, 3, 4, 'Kids 1000 Black Size 6', 'KID10001', 'PU0000000370', NULL, NULL, NULL, 3, 375.00, 500.00, 25.00, 125.00, 'X11100101', 18.00, NULL, 0, 0, 0.00, 0, 0.00, 1, '2024-04-29 17:16:39', '2024-04-29 17:16:39'),
+(5, 2, 4, 'LDSHO 10091', 'LDPX1001', 'PU0000000550', NULL, NULL, NULL, 3, 123.00, 233.00, 47.21, 110.00, NULL, 0.00, 'product_image__1715857100.jpg', 0, 0, 0.00, 0, 0.00, 1, '2024-05-16 10:58:22', '2024-05-16 10:58:22');
 
 -- --------------------------------------------------------
 
@@ -384,11 +392,11 @@ CREATE TABLE `purchase` (
   `vendor_id` int(11) NOT NULL,
   `bill_amount` decimal(8,2) NOT NULL DEFAULT 0.00,
   `due_amount` decimal(8,2) NOT NULL DEFAULT 0.00,
-  `payment_status` tinyint(4) DEFAULT NULL,
-  `payment_mode` tinyint(4) DEFAULT NULL,
+  `payment_status` tinyint(4) DEFAULT NULL COMMENT '0=Pending, 1=Completed',
+  `payment_mode` tinyint(4) DEFAULT NULL COMMENT '0=Cash, 1=UPI, 2=Bank Transfer, 3=Cheque',
   `bill_no` varchar(100) DEFAULT NULL,
   `challan_no` varchar(100) DEFAULT NULL,
-  `received_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `received_date` datetime DEFAULT NULL,
   `note` text DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
@@ -400,8 +408,17 @@ CREATE TABLE `purchase` (
 --
 
 INSERT INTO `purchase` (`id`, `hash_id`, `batch_id`, `vendor_id`, `bill_amount`, `due_amount`, `payment_status`, `payment_mode`, `bill_no`, `challan_no`, `received_date`, `note`, `status`, `created_at`, `updated_at`) VALUES
-(1, '7ac49837-aa2a-4d99-aa1d-41405a0e5521', 4, 45, 9440.00, 4720.00, 0, NULL, 'PUR0001', NULL, '2024-05-01 00:00:00', NULL, 1, '2024-05-01 17:59:44', '2024-05-01 18:00:26'),
-(2, 'de6981bd-9cd3-4396-aa57-70244ae9337d', 4, 47, 14248.50, 14248.50, NULL, NULL, NULL, NULL, '2024-05-01 00:00:00', NULL, 1, '2024-05-01 18:00:55', '2024-05-01 18:00:55');
+(1, '7ac49837-aa2a-4d99-aa1d-41405a0e5521', 4, 45, 9440.00, 4720.00, 0, NULL, 'PUR0001', NULL, '2024-05-01 00:00:00', NULL, 3, '2024-05-01 17:59:44', '2024-05-18 08:45:49'),
+(2, 'de6981bd-9cd3-4396-aa57-70244ae9337d', 4, 47, 14248.50, 14248.50, NULL, NULL, NULL, NULL, '2024-05-01 00:00:00', NULL, 1, '2024-05-01 18:00:55', '2024-05-01 18:00:55'),
+(3, 'a9cf7806-749e-43e4-a165-e8ddd85fb24d', 3, 46, 4814.40, 4814.40, NULL, NULL, 'INV123456', NULL, '2024-05-16 00:00:00', NULL, 1, '2024-05-16 09:54:08', '2024-05-16 09:54:08'),
+(4, '12f9d772-c75f-489a-a365-27dd923fba2f', 3, 46, 151984.00, 151984.00, NULL, NULL, 'INV123456', NULL, '2024-05-18 00:00:00', NULL, 3, '2024-05-18 07:10:25', '2024-05-18 09:01:32'),
+(5, 'c9908fa1-d9ba-46b5-a33d-ad45276d06e9', 5, 53, 1476.00, 1476.00, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2024-05-18 07:16:27', '2024-05-18 07:16:27'),
+(6, '80c0909c-4548-4c00-92f9-3c784aabd9c5', 5, 53, 11400.00, 11400.00, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2024-05-18 07:20:27', '2024-05-18 07:20:27'),
+(7, 'd683574d-1ab4-4ecd-9e6f-6fd9d6234ddb', 5, 53, 4442.00, 1922.00, 0, NULL, NULL, NULL, '2024-05-18 00:00:00', NULL, 1, '2024-05-18 07:51:08', '2024-05-18 07:57:38'),
+(8, '4e55a897-58c8-4feb-b739-18ed9fdaaf39', 5, 53, 3752.00, 3752.00, NULL, NULL, NULL, NULL, '2024-05-18 00:00:00', NULL, 1, '2024-05-18 07:53:05', '2024-05-18 07:53:05'),
+(9, '28a26032-9cae-4750-95ff-9fa3e0c63d87', 5, 45, 7044.00, 7020.00, 0, NULL, NULL, NULL, '2024-05-18 00:00:00', NULL, 1, '2024-05-18 07:59:13', '2024-05-18 07:59:39'),
+(10, '160c1d80-0b14-4bc3-9e97-d4ea352387e0', 4, 46, 148464.00, 52884.00, 0, NULL, 'INV01010', NULL, '2024-05-18 00:00:00', NULL, 3, '2024-05-18 08:12:11', '2024-05-18 08:45:41'),
+(11, 'e2ed7e22-9cb8-4106-8f0a-5f776e9ed526', 4, 46, 3540.00, 3540.00, NULL, NULL, NULL, NULL, '2024-05-18 00:00:00', NULL, 1, '2024-05-18 08:46:53', '2024-05-18 08:46:53');
 
 -- --------------------------------------------------------
 
@@ -418,21 +435,35 @@ CREATE TABLE `purchase_products` (
   `product_qty` decimal(8,2) NOT NULL DEFAULT 0.00,
   `unit_id` int(11) NOT NULL,
   `purchase_price` decimal(8,2) NOT NULL DEFAULT 0.00,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT NULL,
+  `sale_price` decimal(8,2) NOT NULL DEFAULT 0.00,
   `gst_rate` decimal(8,2) NOT NULL DEFAULT 0.00,
   `gst_amount` decimal(8,2) NOT NULL DEFAULT 0.00,
-  `total_amount` decimal(8,2) NOT NULL DEFAULT 0.00
+  `total_amount` decimal(8,2) NOT NULL DEFAULT 0.00,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `purchase_products`
 --
 
-INSERT INTO `purchase_products` (`id`, `purchase_id`, `batch_id`, `vendor_id`, `product_id`, `product_qty`, `unit_id`, `purchase_price`, `status`, `created_at`, `updated_at`, `gst_rate`, `gst_amount`, `total_amount`) VALUES
-(1, 1, 4, 45, 3, 20.00, 3, 200.00, 1, '2024-05-01 18:00:26', '2024-05-01 18:00:26', 18.00, 720.00, 4720.00),
-(2, 2, 4, 47, 4, 35.00, 3, 345.00, 1, '2024-05-01 18:00:55', '2024-05-01 18:00:55', 18.00, 2173.50, 14248.50);
+INSERT INTO `purchase_products` (`id`, `purchase_id`, `batch_id`, `vendor_id`, `product_id`, `product_qty`, `unit_id`, `purchase_price`, `sale_price`, `gst_rate`, `gst_amount`, `total_amount`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 4, 45, 3, 20.00, 3, 200.00, 0.00, 18.00, 720.00, 4720.00, 3, '2024-05-01 18:00:26', '2024-05-18 08:45:49'),
+(2, 2, 4, 47, 4, 35.00, 3, 345.00, 0.00, 18.00, 2173.50, 14248.50, 1, '2024-05-01 18:00:55', '2024-05-01 18:00:55'),
+(3, 3, 3, 46, 3, 12.00, 3, 340.00, 0.00, 18.00, 734.40, 4814.40, 1, '2024-05-16 09:54:08', '2024-05-16 09:54:08'),
+(4, 4, 3, 46, 3, 560.00, 3, 230.00, 0.00, 18.00, 23184.00, 151984.00, 3, '2024-05-18 07:10:25', '2024-05-18 09:01:32'),
+(5, 5, 5, 53, 5, 12.00, 3, 123.00, 0.00, 0.00, 0.00, 1476.00, 1, '2024-05-18 07:16:27', '2024-05-18 07:16:27'),
+(6, 6, 5, 53, 5, 456.00, 3, 25.00, 0.00, 0.00, 0.00, 11400.00, 1, '2024-05-18 07:20:27', '2024-05-18 07:20:27'),
+(7, 7, 5, 53, 5, 45.00, 3, 34.00, 0.00, 0.00, 0.00, 1530.00, 1, '2024-05-18 07:51:08', '2024-05-18 07:51:08'),
+(8, 8, 5, 53, 5, 67.00, 3, 56.00, 0.00, 0.00, 0.00, 3752.00, 1, '2024-05-18 07:53:05', '2024-05-18 07:53:05'),
+(9, 7, 5, 53, 5, 45.00, 3, 56.00, 0.00, 0.00, 0.00, 2520.00, 1, '2024-05-18 07:55:36', '2024-05-18 07:55:36'),
+(10, 7, 5, 53, 5, 7.00, 3, 56.00, 0.00, 0.00, 0.00, 392.00, 1, '2024-05-18 07:57:38', '2024-05-18 07:57:38'),
+(11, 9, 5, 45, 5, 4.00, 3, 6.00, 0.00, 0.00, 0.00, 24.00, 1, '2024-05-18 07:59:13', '2024-05-18 07:59:13'),
+(12, 9, 5, 45, 2, 78.00, 3, 90.00, 0.00, 0.00, 0.00, 7020.00, 1, '2024-05-18 07:59:39', '2024-05-18 07:59:39'),
+(13, 10, 4, 46, 3, 900.00, 3, 90.00, 0.00, 18.00, 14580.00, 95580.00, 3, '2024-05-18 08:12:11', '2024-05-18 08:45:41'),
+(14, 10, 4, 46, 1, 678.00, 3, 78.00, 0.00, 0.00, 0.00, 52884.00, 3, '2024-05-18 08:12:50', '2024-05-18 08:45:41'),
+(15, 11, 4, 46, 3, 60.00, 3, 50.00, 0.00, 18.00, 540.00, 3540.00, 1, '2024-05-18 08:46:53', '2024-05-18 08:46:53');
 
 -- --------------------------------------------------------
 
@@ -459,6 +490,19 @@ INSERT INTO `roles` (`id`, `name`, `key_name`, `display_order`, `description`, `
 (1, 'Super Admin', 'super-admin', 0, NULL, 1, '2024-04-15 12:18:09', NULL),
 (2, 'Admin', 'admin', 0, NULL, 1, '2024-04-15 12:18:48', NULL),
 (3, 'User', 'user', 0, NULL, 1, '2024-04-15 12:21:16', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sales`
+--
+
+CREATE TABLE `sales` (
+  `id` int(11) NOT NULL,
+  `invoice_no` varchar(160) NOT NULL,
+  `hash_id` varchar(200) NOT NULL,
+  `customer_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -656,7 +700,11 @@ INSERT INTO `users` (`id`, `hash_id`, `unique_id`, `login_id`, `first_name`, `mi
 (50, 'd5af9772-eb55-4f11-8cc9-3ae5a32e4cf9', '6500000442', NULL, 'Customer', NULL, 'Two', NULL, 'customer2@yopmail.com', NULL, '8891120912', '8891120912', NULL, 0, NULL, 5, 1, '2024-04-15 18:18:20', '2024-04-15 18:19:22', NULL, NULL, NULL, NULL),
 (51, '39ba207c-b90c-442e-977e-31e60bc18c73', '2500000948', NULL, 'Customer', NULL, 'Three', NULL, 'customer3@yopmail.com', NULL, '7788998878', NULL, NULL, 0, NULL, 5, 1, '2024-04-15 18:18:54', '2024-04-15 18:18:54', NULL, NULL, NULL, NULL),
 (52, '72dc2aef-5d7d-450b-b0e2-0f17a114ddca', '6000000421', 'DZ2WJ2', 'Demo', NULL, 'Userx', 'demoUserX', 'demouserx@yopmail.com', '$2y$10$R9nYR2OU0drvCGIBXAG4fuJYtjhmJBnuS4xDkBctLLlm01P4rLhMK', '6712341231', '6712341231', NULL, 1, NULL, 1, 1, '2024-04-22 15:59:13', '2024-04-22 15:59:36', NULL, NULL, NULL, NULL),
-(53, 'ba853d5e-9638-4947-b930-f63b5ca48e33', '6900000598', NULL, 'Demo', NULL, 'Vendor', NULL, 'demovendor1@yopm.com', NULL, '8877110091', '8877110091', NULL, 0, NULL, 2, 1, '2024-04-22 16:00:33', '2024-04-22 16:00:33', NULL, NULL, NULL, NULL);
+(53, 'ba853d5e-9638-4947-b930-f63b5ca48e33', '6900000598', NULL, 'Demo', NULL, 'Vendor', NULL, 'demovendor1@yopm.com', NULL, '8877110091', '8877110091', NULL, 0, NULL, 2, 1, '2024-04-22 16:00:33', '2024-04-22 16:00:33', NULL, NULL, NULL, NULL),
+(54, 'c4533ce5-829c-4f1b-9f72-509d10208c99', '6500001030', NULL, 'Quickc', NULL, 'One', NULL, 'quickc1@yopmail.com', NULL, '7671689012', NULL, NULL, 0, NULL, 5, 1, '2024-05-18 14:11:24', '2024-05-18 14:11:24', NULL, NULL, NULL, NULL),
+(55, 'e40843ce-dd8a-40f8-88dc-a71c33b70427', '5500000981', NULL, 'Qcus', NULL, 'Two', NULL, 'qc2@yopmail.com', NULL, '8918893513', NULL, NULL, 0, NULL, 5, 1, '2024-05-18 14:18:27', '2024-05-18 14:18:27', NULL, NULL, NULL, NULL),
+(56, 'b69f7bad-33db-48e7-92c4-7f2bc3bdf2ba', '2100000357', 'PH1YEWJWAIMB', 'Qc3', NULL, 'Three', NULL, 'qc3@yopmail.com', NULL, '7781009012', NULL, NULL, 0, NULL, 5, 1, '2024-05-18 14:22:59', '2024-05-18 14:22:59', NULL, NULL, NULL, NULL),
+(57, '04d08540-f0cf-4024-846f-d8f25ac52e67', '8900000190', '8EPOE5OA4UKG', 'Qc', NULL, 'Four', NULL, 'qc4@yopmail.com', NULL, '9911220019', NULL, NULL, 0, NULL, 5, 1, '2024-05-18 14:24:05', '2024-05-18 14:24:05', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -757,7 +805,11 @@ INSERT INTO `user_roles` (`id`, `user_id`, `role_id`, `status`, `created_at`, `u
 (42, 42, 3, 1, '2024-04-15 13:24:22', NULL),
 (43, 43, 3, 1, '2024-04-15 13:24:59', NULL),
 (44, 44, 3, 1, '2024-04-15 13:25:31', '2024-04-15 16:11:06'),
-(45, 52, 2, 1, '2024-04-22 21:29:13', NULL);
+(45, 52, 2, 1, '2024-04-22 21:29:13', NULL),
+(46, 54, 3, 1, '2024-05-18 19:41:24', NULL),
+(47, 55, 3, 1, '2024-05-18 19:48:27', NULL),
+(48, 56, 3, 1, '2024-05-18 19:52:59', NULL),
+(49, 57, 3, 1, '2024-05-18 19:54:05', NULL);
 
 --
 -- Indexes for dumped tables
@@ -862,6 +914,12 @@ ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `sales`
+--
+ALTER TABLE `sales`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `status_master`
 --
 ALTER TABLE `status_master`
@@ -923,13 +981,13 @@ ALTER TABLE `user_roles`
 -- AUTO_INCREMENT for table `batches`
 --
 ALTER TABLE `batches`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `batch_products`
 --
 ALTER TABLE `batch_products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `brands`
@@ -995,25 +1053,31 @@ ALTER TABLE `product_subcategory`
 -- AUTO_INCREMENT for table `product_variants`
 --
 ALTER TABLE `product_variants`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `purchase`
 --
 ALTER TABLE `purchase`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `purchase_products`
 --
 ALTER TABLE `purchase_products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `sales`
+--
+ALTER TABLE `sales`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `status_master`
@@ -1049,7 +1113,7 @@ ALTER TABLE `unit_master`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT for table `users_profile`
@@ -1067,7 +1131,7 @@ ALTER TABLE `user_categories`
 -- AUTO_INCREMENT for table `user_roles`
 --
 ALTER TABLE `user_roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
