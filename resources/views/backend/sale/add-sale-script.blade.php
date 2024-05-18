@@ -23,6 +23,8 @@ $(document).ready(function() {
             keyboard: false
         }, 'show');
     });
+
+    /*Main Form Validation*/
     $("#frmx").validate({
         errorClass: 'onex-error',
         errorElement: 'div',
@@ -120,6 +122,8 @@ $(document).ready(function() {
             }
         }
     });
+
+    /*Quick Customer Form Validation*/
     $("#addCustomerFrm").validate({
         errorClass: 'onex-error',
         errorElement: 'div',
@@ -167,6 +171,8 @@ $(document).ready(function() {
             }
         }
     });
+
+    /*Add Quick Customer Ajax Process*/
     $('body').on('click', '#addNewCustomerBtn', function() {
         if($('#addCustomerFrm').valid()) {
             displayLoading();
@@ -204,6 +210,8 @@ $(document).ready(function() {
             });
         }
     });
+
+    /*Once Select2 Select Item Then Error Removed*/
     $('body').on('select2:select', '.onex-select2', function (e) { 
         if($(this).val() != '') {
             $('#' + $(this).attr('id') + '-error').hide();
@@ -216,7 +224,9 @@ $(document).ready(function() {
             $('#' + $(this).attr('id') + '-error').hide();
         }
         $('#unitId').valid();
-    })
+    });
+
+    /*Ajax Call: When Product Dropdown Changed*/
     $('body').on('change', '#productId', function () {
         if($(this).val() != '') {
             let _productId = $(this).val();
@@ -257,6 +267,8 @@ $(document).ready(function() {
             });
         }
     });
+
+    /*Ajax Call: When Batch Dropdown Changed*/
     $('body').on('change', '#batchId', function () {
         if($(this).val() != '') {
             let _batchId = $(this).val();
@@ -321,6 +333,7 @@ $(document).ready(function() {
             });
         }
     });
+
     $('#productQty').on('blur', function() {
         if ($(this).val() != '') {
             if (parseInt($(this).val()) <= parseInt($('#currentStock').val())) {
@@ -341,6 +354,7 @@ $(document).ready(function() {
         $('#createSaleBtn').attr('disabled', 'disabled');
     }
 
+    /*Cart Table Init Load*/
     function initCartTable() {
         $('#addToCartTable').find('tbody').empty('').html(`
             <tr class="dummy-tr">
@@ -368,6 +382,7 @@ $(document).ready(function() {
         `);
     }
 
+    /*Price Related Calculation Fields Init Load*/
     function initPriceCalculation() {
         $('#salePrice').val('');
         $('#productQty').val('');
@@ -377,6 +392,7 @@ $(document).ready(function() {
         $('#totalAmount').val('0.00');
     }
 
+    /*Hidden Fields Init Load*/
     function initItem() {
         $('#currentStock').val('');
         $('#batchProductId').val('');
@@ -385,6 +401,7 @@ $(document).ready(function() {
         $('#batchQuantity').val('');
     }
 
+    /*Price Calculation With GST*/
     function salePriceCalculate() {
         if ($('#productId').val() != '' && $('#batchId').val() != '' && $('#unitId').val() != '') {
             let productQty = parseFloat($('#productQty').val());
@@ -399,15 +416,7 @@ $(document).ready(function() {
         }
     }
 
-    function checkPurchaseSalePrice()
-    {
-        if (parseFloat($('#salePrice').val()) >= parseFloat($('#purchasePrice').val())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
+    /*Ajax Call: Add Item To Cart Table*/
     $('#addItemBtn').on('click', function() {
         if($("#frmx").valid()) {
             if(parseFloat($('#salePrice').val()) < parseFloat($('#batchPurchasePrice').val())) {
@@ -436,6 +445,7 @@ $(document).ready(function() {
         }
     });
 
+    /*Ajax: Add Item To Cart Table - Session Process*/
     function addItemToCartTable() {
         alert('xxxxxxx');
     }
