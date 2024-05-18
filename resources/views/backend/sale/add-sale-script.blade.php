@@ -447,7 +447,28 @@ $(document).ready(function() {
 
     /*Ajax: Add Item To Cart Table - Session Process*/
     function addItemToCartTable() {
-        alert('xxxxxxx');
+        $('.cart-reload-btn').removeClass('d-none');
+        $('#cancleSaleBtn').removeClass('d-none');
+        $('#emptyCartItemBtn').removeClass('d-none');
+        $('#createSaleBtn').removeAttr('disabled');
+        $('#addItemBtn').removeAttr('disabled');
+
+        $('#productId').val('').trigger('change');
+        $('#batchId').empty().html("<option value=''></option>").trigger("change");
+        initPriceCalculation();
+        initItem();
+    }
+
+    $('body').on('click', '#createSaleBtn', function() {
+        if ($('#invoiceNo').valid() && $('#saleDate').valid() && $('#customerId').valid()) {
+            saleProcess();
+        } else {
+            displayAlert('error', 'Oops!', 'Please check all the required fields');
+        }
+    });
+
+    function saleProcess() {
+        console.log('xxxxxxxx');
     }
 });
 </script>

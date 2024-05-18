@@ -13,7 +13,8 @@
 
 @section('content_title', 'Add New Sale & Stock Out')
 @section('content_buttons')
-    <button type="button" class="btn btn-warning btn-sm text-danger" id="cancleSaleBtn"><i class="fas fa-ban text-danger"></i> Cancel Sale </button>
+    <button type="button" class="btn btn-success btn-sm cart-reload-btn d-none"><i class="fas fa-sync"></i></button>
+    <button type="button" class="btn btn-warning btn-sm text-danger d-none" id="cancleSaleBtn"><i class="fas fa-ban text-danger"></i> Cancel Sale </button>
     <a href="{{ route('sale.index') }}" class="btn btn-primary btn-sm"><i class="fas fa-cubes"></i> All Sales</a>
 @endsection
 
@@ -124,7 +125,8 @@
 <div class="row">
     <div class="col-md-4">
         <button type="button" class="btn btn-primary" id="addItemBtn"><i class="fas fa-plus"></i> Add Item</button>
-        <button type="button" class="btn btn-danger" id="emptyCartItemBtn"><i class="fas fa-trash-alt"></i> Delete All</button>
+        <button type="button" class="btn btn-success cart-reload-btn d-none"><i class="fas fa-sync"></i></button>
+        <button type="button" class="btn btn-danger d-none" id="emptyCartItemBtn"><i class="fas fa-trash-alt"></i> Delete All</button>
     </div>
 </div>
 </form>
