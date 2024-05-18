@@ -18,6 +18,7 @@ use App\Http\Controllers\ProductStockController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\BarcodeController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\SaleController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,11 +29,20 @@ use App\Http\Controllers\PurchaseController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+/*
+For secure hidden root route
 Route::prefix('administrator/auth')->group(function () {
     Route::group(['middleware' => 'ifNotAuth'], function() {
         Route::get('/', [UserSigninController::class, 'index'])->name('signin.index');
         Route::post('/signin-process', [UserSigninController::class, 'signin'])->name('signin.signin');
     });
+});
+*/
+
+Route::group(['middleware' => 'ifNotAuth'], function() {
+    Route::get('/', [UserSigninController::class, 'index'])->name('signin.index');
+    Route::post('/signin-process', [UserSigninController::class, 'signin'])->name('signin.signin');
 });
 
 Route::prefix('auth')->group(function () {
@@ -226,8 +236,10 @@ Route::prefix('auth')->group(function () {
             Route::prefix('purchase')->group(function () {
                 Route::name('purchase.')->group(function () {
                     Route::controller(PurchaseController::class)->group(function () {
-                        /* Each Product Purchase */
                         Route::get('/', 'index')->name('all-purchases');
+                        Route::get('/purchase/delete/{id}', 'deletePurchase')->name('delete-purchase');
+
+                        /* Each Product Purchase */
                         Route::get('/add', 'add')->name('add-purchase');
                         Route::post('/add', 'save')->name('save-purchase');
                         
@@ -242,13 +254,23 @@ Route::prefix('auth')->group(function () {
                 });
             });
 
+            Route::prefix('sale')->group(function () {
+                Route::name('sale.')->group(function () {
+                    Route::controller(SaleController::class)->group(function () {
+                        Route::get('/', 'index')->name('index');
+                        Route::get('/create', 'createNewSale')->name('add');
+                        Route::post('/create', 'createSave')->name('save');
+                        Route::post('/get-product-batches', 'getProductBatches')->name('get-product-batches');
+                        Route::post('/get-purchase-product', 'getPurchaseProduct')->name('get-purchase-product');
+                    });
+                });
+            });
+
             Route::prefix('barcode')->group(function () {
                 Route::name('barcode.')->group(function () {
                     Route::controller(BarcodeController::class)->group(function () {
                         Route::get('/products', 'productIndex')->name('product.index');
-                        Route::post('/products', 'productCreate')->name('product.create');
                         Route::get('/batches', 'batchIndex')->name('batch.index');
-                        Route::post('/batches', 'batchCreate')->name('batch.create');
                     });
                 });
             });

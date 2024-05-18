@@ -245,3 +245,6 @@ table tbody td {
     letter-spacing: 5px;
     font-weight: 600;
 }
+tr.dummy-tr td {
+    color: #ccc;
+}

@@ -114,6 +114,40 @@ class UserController extends Controller
             ->with('message_text', 'Something Went Wrong!');
     }
 
+    public function quickAddUser(Request $request)
+    {
+        $emailId = $request->input('email_id');
+        $phoneNumber = $request->input('phone_number');
+
+        $checkEmail = User::where('email_id', $emailId)->whereNotNull('email_id')->exists();
+        $checkPhone = User::where('phone_number', $phoneNumber)->whereNotNull('phone_number')->exists();
+
+        if ($checkEmail) {
+            return response()->json(array('isSuccess' => false, 'message' => 'Email id already exist'));
+        }
+        if ($checkPhone) {
+            return response()->json(array('isSuccess' => false, 'message' => 'Phone number already exist'));
+        }
+
+        $user = new User();
+        $user->hash_id = Str::uuid(36)->toString();
+        $user->unique_id = Helper::userUniqueId();
+        $user->first_name = $request->input('first_name');
+        $user->last_name = $request->input('last_name');
+        $user->email_id = $request->input('email_id');
+        $user->phone_number = $request->input('phone_number');
+        $user->whatsapp_number = $request->input('whatsapp_number');
+        $user->is_crm_access = $request->input('crm_access_value') ?? 0;
+        $user->user_category = $request->input('user_category');
+        $user->login_id = strtoupper(Str::random(12));
+        $user->status = 1;
+        if ($user->save()) {
+            UserRole::insert(['user_id' => $user->id, 'role_id' => $request->input('role_id')]);
+            return response()->json(array('isSuccess' => true, 'message' => 'New customer has been created successfully', 'data' => $user));
+        }
+        return response()->json(array('isSuccess' => false, 'message' => 'Something went wrong'));
+    }
+
     public function deleteUser(Request $request, $id)
     {
         $id = Helper::userId($id);

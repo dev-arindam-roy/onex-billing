@@ -183,4 +183,11 @@ class Helper {
         return 'BC' . date('Ym') . '-' . str_pad($maxId, 6, 0, STR_PAD_LEFT);
     }
 
+    public static function createSaleInvoiceNo()
+    {
+        $maxId = DB::table('sales')->max('id');
+        $maxId = $maxId + 1;
+        return 'INV' . date('Ym') . '-' . str_pad($maxId, 6, 0, STR_PAD_LEFT);
+    }
+
 }

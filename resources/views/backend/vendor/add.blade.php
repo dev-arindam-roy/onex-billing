@@ -127,6 +127,7 @@
     <div class="col-md-4"></div>
 </div>
 <input type="hidden" name="user_category" id="userCategory" value="2"/>
+<input type="hidden" name="role_id" id="userRole" value="3"/>
 </form>
 @endsection
 

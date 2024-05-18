@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ProductVariants;
+use App\Models\Batch;
 use DNS1D;
 
 class BarcodeController extends Controller
 {
     protected static $defaultType = 'C39+';
     protected static $defaultColor = 'black';
-    protected static $defaultSize = 2;
+    protected static $defaultSize = 1;
 
     public function __construct()
     {
@@ -43,6 +44,34 @@ class BarcodeController extends Controller
         $dataBag['products'] = $allProducts;
 
         return view('backend.barcode.product-barcode', $dataBag);
+    }
+
+    public function batchIndex(Request $request)
+    {
+        $dataBag = [];
+        $dataBag['sidebar_parent'] = 'barcode_management';
+        $dataBag['sidebar_child'] = 'batch-barcode';
+        $dataBag['barcode'] = null;
+
+        if (!empty($request->get('code'))) {
+            $code = $request->get('code');
+            $type = !empty($request->get('type')) ? $request->get('type') : self::$defaultType;
+            $color = !empty($request->get('color')) ? $request->get('color') : self::$defaultColor;
+            $size = !empty($request->get('size')) ? $request->get('size') : self::$defaultSize;
+            $dataBag['barcode'] = self::createBarcodeSVG($code, $type, $color, $size);
+        }
+
+        $allBatches = Batch::select('id','name','batch_no')
+            ->where('status', '!=', 3)
+            ->orderBy('name', 'asc')
+            ->get();
+        
+        //$dataBag['types'] = self::$defaultType;
+        $dataBag['colors'] = $this->colors();
+        $dataBag['sizes'] = $this->sizes();
+        $dataBag['batches'] = $allBatches;
+
+        return view('backend.barcode.batch-barcode', $dataBag);
     }
 
     public static function createBarcodeSVG($code, $type, $color, $size)

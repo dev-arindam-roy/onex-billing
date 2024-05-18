@@ -71,7 +71,7 @@
     </div>
     <div class="col-md-4">
         <div class="form-group">
-            <input type="hidden" name="login_id" id="loginId" class="form-control" value="{{strtoupper(Str::random(6))}}" required="required" readonly/>
+            <input type="hidden" name="login_id" id="loginId" class="form-control" value="{{strtoupper(Str::random(12))}}" required="required" readonly/>
             <label class="onex-form-label">System Access:</label>
             <div class="form-check">
                 <input name="is_crm_access" id="isCrmAccess" class="form-check-input" type="checkbox" value="1" checked="checked"/>

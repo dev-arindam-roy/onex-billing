@@ -87,6 +87,7 @@ class CustomerController extends Controller
         $user->user_category = $this->userCategory;
         $user->status = 1;
         if ($user->save()) {
+            UserRole::insert(['user_id' => $user->id, 'role_id' => $request->input('role_id')]);
             self::saveOtherInformation($request, $user->id);
             return redirect()->back()
                 ->with('message_type', 'success')

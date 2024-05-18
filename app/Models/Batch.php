@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\PurchaseProduct;
+use App\Models\BatchProducts;
 use App\Models\Purchase;
 
 class Batch extends Model
@@ -20,5 +21,9 @@ class Batch extends Model
 
     public function purchase() {
         return $this->hasMany(Purchase::class, 'batch_id', 'id');
+    }
+
+    public function batchProducts() {
+        return $this->hasMany(BatchProducts::class, 'batch_id', 'id');
     }
 }

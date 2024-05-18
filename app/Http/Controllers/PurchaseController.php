@@ -26,8 +26,25 @@ class PurchaseController extends Controller
         $dataBag = [];
         $dataBag['sidebar_parent'] = 'purchase_management';
         $dataBag['sidebar_child'] = 'all-purchases';
-        $pagination = !empty($request->get('pagination')) ? $request->get('pagination') : 25; 
-        $dataBag['data'] = Purchase::with(['purchaseProducts'])
+        $pagination = !empty($request->get('pagination')) ? $request->get('pagination') : 25;
+        $searchText = ($request->has('search_text') && !empty($request->get('search_text'))) ? $request->get('search_text') : null;  
+        $dataBag['data'] = Purchase::with([
+                'batchInfo',
+                'vendorInfo',
+                'purchaseProducts'
+            ])
+            ->when(!empty($searchText), function ($query) use ($searchText) {
+                $query->whereHas('batchInfo', function ($batchQry) use ($searchText) {
+                    $batchQry->where('batch_no', $searchText)
+                        ->orWhere('name', 'LIKE', '%' . $searchText . '%')
+                        ->orWhere('bill_no', $searchText);
+                });
+                $query->orWhereHas('vendorInfo', function ($vendorQry) use ($searchText) {
+                    $vendorQry->where('first_name', 'like', '%' . $searchText . '%')
+                        ->orWhere('last_name', 'like', '%' . $searchText . '%');
+                });
+                return $query;
+            })
             ->where('status', '!=', 3)
             ->orderBy('id', 'desc')
             ->paginate($pagination);
@@ -67,17 +84,24 @@ class PurchaseController extends Controller
         $productId = $request->input('product_id');
         $batchId = $request->input('batch_id');
         $vendorId = $request->input('vendor_id');
-        $billNo = $request->input('bill_no');
+        $billNo = !empty($request->input('bill_no')) ? $request->input('bill_no') : null;
         $receivedDate = date('Y-m-d', strtotime($request->input('received_date')));
 
+        $receivedDateStart = $receivedDate . '00:00:00';
+        $receivedDateEnd = $receivedDate . '23:59:59';
+
+        /** check already purchase exist or not with below condition */
         $isPurchaseExist = Purchase::where('batch_id', $batchId)
-            ->where('vendor_id', $vendorId)
             ->where('bill_no', $billNo)
+            ->where('vendor_id', $vendorId)
             ->whereDate('received_date', $receivedDate)
             ->first();
 
+        /** purchase entry */
         $purchaseId = self::doPurchase($request, $isPurchaseExist);
+
         if (!empty($purchaseId)) {
+            /** purchase product entry */
             $purchaseProduct = new PurchaseProduct();
             $purchaseProduct->purchase_id = $purchaseId;
             $purchaseProduct->batch_id = $request->input('batch_id');
@@ -90,11 +114,20 @@ class PurchaseController extends Controller
             $purchaseProduct->gst_amount = $request->input('gst_amount');
             $purchaseProduct->total_amount = $request->input('total_amount');
             if ($purchaseProduct->save()) {
+                
+                /** check purchase batch with product combination */
                 $isBatchProductsExist = BatchProducts::where('batch_id', $batchId)
                     ->where('product_id', $productId)
                     ->first();
 
-                $batchProductsId = self::batchWiseProduct($request, $isBatchProductsExist);
+                /** purchase batch product add or update */
+                $batchEntry = self::batchWiseProduct($request, $isBatchProductsExist);
+
+                /** product variant master table final current stock */
+                if (!empty($batchEntry)) {
+                    ProductVariants::where('id', $batchEntry->product_id)
+                        ->increment('available_stock', $batchEntry->product_qty);
+                }
 
                 return redirect()->back()
                     ->with('message_type', 'success')
@@ -140,8 +173,10 @@ class PurchaseController extends Controller
             $batchProducts->product_qty = $batchProducts->product_qty + $requestObj->input('product_qty');
             $batchProducts->purchase_price = $requestObj->input('purchase_price');
             $batchProducts->sale_price = $requestObj->input('sale_price');
+            $batchProducts->status = 1;
             $batchProducts->save();
-            return $batchProducts->id;
+            Batch::where('id', $requestObj->input('batch_id'))->update(['status' => 1]);
+            return $batchProducts;
         }
 
         $batchProductsEntry = new BatchProducts();
@@ -150,9 +185,47 @@ class PurchaseController extends Controller
         $batchProductsEntry->product_qty = $requestObj->input('product_qty');
         $batchProductsEntry->purchase_price = $requestObj->input('purchase_price');
         $batchProductsEntry->sale_price = $requestObj->input('sale_price');
+        $batchProducts->status = 1;
         $batchProductsEntry->save();
-        return $batchProductsEntry->id;
+        Batch::where('id', $requestObj->input('batch_id'))->update(['status' => 1]);
+        return $batchProductsEntry;
 
+    }
+
+    public function deletePurchase(Request $request, $id)
+    {
+        $check = Purchase::where('hash_id', $id)->first();
+        if (empty($check)) {
+            return back()
+                ->with('message_type', 'error')
+                ->with('message_title', 'Server Error!')
+                ->with('message_text', 'Something Went Wrong!');
+        }
+        $purchase = Purchase::findOrFail($check->id);
+        $purchase->status = 3;
+        if ($purchase->save()) {
+            $purchaseProducts = PurchaseProduct::where('purchase_id', $purchase->id)->where('status', 1)->get();
+            if (count($purchaseProducts)) {
+                foreach ($purchaseProducts as $k => $v) {
+                    
+                    BatchProducts::where('batch_id', $v->batch_id)
+                        ->where('product_id', $v->product_id)
+                        ->where('status', 1)
+                        ->where('product_qty', '>=', $v->product_qty)
+                        ->decrement('product_qty', $v->product_qty);
+                    
+                    ProductVariants::where('id', $v->product_id)
+                        ->where('available_stock', '>=', $v->product_qty)
+                        ->decrement('available_stock', $v->product_qty);
+                }
+                PurchaseProduct::where('purchase_id', $purchase->id)->update(['status' => 3]);
+                BatchProducts::where('status', 1)->where('product_qty', '<=', 0)->update(['status' => 3]);
+            }
+        }
+        return redirect()->back()
+            ->with('message_type', 'success')
+            ->with('message_title', 'Done!')
+            ->with('message_text', 'Purchase entry has been deleted successfully');
     }
 
     /**
