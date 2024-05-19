@@ -229,6 +229,8 @@ Route::prefix('auth')->group(function () {
                         Route::get('/out', 'stockOutIndex')->name('out');
                         Route::get('/out/add', 'outStock')->name('out-add');
                         Route::post('/out/save', 'saveOutStock')->name('out-save');
+
+                        Route::get('/current-stock', 'currentStock')->name('current');
                     });
                 });
             });

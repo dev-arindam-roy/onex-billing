@@ -4,18 +4,50 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Models\ProductVariants;
-use App\Models\StockIn;
-use App\Models\StockOut;
+use App\Models\Products;
 use App\Models\User;
-use Carbon\Carbon;
+use App\Models\Brand;
+use App\Models\Unit;
+use App\Models\ProductCategories;
+use App\Models\ProductSubCategories;
+use App\Models\ProductVariants;
+use App\Models\ProductBundleFree;
 use Session;
+use Helper;
+use Image;
 use Hash;
 use Auth;
 use DB;
 
 class ProductStockController extends Controller
 {
+
+    public function currentStock(Request $request) 
+    {
+        $dataBag = [];
+        $dataBag['sidebar_parent'] = 'stock_management';
+        $dataBag['sidebar_child'] = 'stock-current';
+        $pagination = !empty($request->get('pagination')) ? $request->get('pagination') : 25; 
+        
+        $searchProduct = ($request->has('search_text') && !empty($request->get('search_text'))) ? $request->get('search_text') : null; 
+        $dataBag['data'] = ProductVariants::with(['baseProduct', 'productUnit', 'productBrand'])
+            ->when(!empty($searchProduct), function ($query) use ($searchProduct) {
+                return $query->where('name', 'like', '%' . $searchProduct . '%')
+                    ->orWhere('barcode_no', $searchProduct)
+                    ->orWhere('sku', $searchProduct)
+                    ->orWhere('hsn_code', $searchProduct);
+            })
+            ->where('status', '!=', 3)
+            ->orderBy('id', 'desc')
+            ->paginate($pagination);
+        
+        if ($request->ajax()) {
+            return view('backend.product-stock.all-current-stock-render', $dataBag);
+        }
+    
+        return view('backend.product-stock.current-stock-index', $dataBag);
+    }
+
     public function stockInIndex(Request $request)
     {
         $dataBag = [];

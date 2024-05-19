@@ -23,7 +23,7 @@
 @if(!empty($product->barcode_no))
 <div class="row">
     <div class="col-md-6 svg-barcode-container">
-        {!! DNS1D::getBarcodeSVG($product->barcode_no, 'C39+', 2, 45, 'black', true) !!}
+        {!! DNS1D::getBarcodeSVG($product->barcode_no, 'C39+', 1, 45, 'black', true) !!}
     </div>
     <div class="col-md-6">
         <div class="dropdown">

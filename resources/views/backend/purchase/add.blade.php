@@ -13,6 +13,9 @@
 
 @section('content_title', 'Add New Purchase & Stock Entry')
 @section('content_buttons')
+    @if(!empty(old('batch_id')) && !empty(old('vendor_id'))) 
+        <a href="{{ route('purchase.add-purchase') }}" class="btn btn-warning btn-sm"><i class="fas fa-sync"></i> Reset - New Entry</a>
+    @endif
     <a href="{{ route('purchase.all-purchases') }}" class="btn btn-primary btn-sm"><i class="fas fa-cubes"></i> All Purchases</a>
 @endsection
 
@@ -23,14 +26,14 @@
     <div class="col-md-3">
         <div class="form-group">
             <label for="billNo" class="onex-form-label">Purchase Invoice / Bill No:</label>
-            <input type="text" name="bill_no" id="billNo" class="form-control" placeholder="Invoice / Bill" />
+            <input type="text" name="bill_no" id="billNo" class="form-control" placeholder="Invoice / Bill" value="{{ old('bill_no') }}" />
         </div>
     </div>
     <div class="col-md-3">
         <div class="form-group" id="bsDatePickerContainer">
             <label for="receivedDate" class="onex-form-label">Received Date: <em>*</em></label>
             <input type="text" name="received_date" id="receivedDate" class="form-control onex-datepicker" readonly="readonly" placeholder="Date" required="required" />
-            <input type="hidden" id="todayDateHidden" value="{{ date('Y/m/d') }}"/>
+            <input type="hidden" id="todayDateHidden" value="{{ !empty(old('received_date')) ? old('received_date') : date('Y/m/d') }}"/>
         </div>
     </div>
 </div>
@@ -38,10 +41,11 @@
     <div class="col-md-6">
         <div class="form-group">
             <label for="batchId" class="onex-form-label">Batch No: <em>*</em></label>
-            <select name="batch_id" class="form-control onex-select2" id="batchId" required="required">
+            <select name="batch_id" class="form-control onex-select2" id="batchId" required="required" data-placeholder="Select a batch">
+                <option value=""></option>
                 @if(!empty($batches) && count($batches))
                     @foreach($batches as $k => $v)
-                        <option value="{{ $v->id }}">{{ $v->batch_no }} @if(!empty($v->name)) ({{ $v->name }}) @endif</option>
+                        <option value="{{ $v->id }}" @if(!empty(old('batch_id')) && old('batch_id') == $v->id) selected="selected" @endif>{{ $v->batch_no }} @if(!empty($v->name)) ({{ $v->name }}) @endif</option>
                     @endforeach
                 @endif
             </select>
@@ -50,11 +54,11 @@
     <div class="col-md-4">
         <div class="form-group">
             <label for="vendorId" class="onex-form-label">Vendor/Supplier: <em>*</em></label>
-            <select name="vendor_id" class="form-control onex-select2" id="vendorId" required="required">
+            <select name="vendor_id" class="form-control onex-select2" id="vendorId" required="required" data-placeholder="Select a vendor">
                 <option value=""></option>
                 @if(!empty($vendors) && count($vendors))
                     @foreach($vendors as $k => $v)
-                        <option value="{{ $v->id }}">{{ $v->first_name . ' ' . $v->last_name }}</option>
+                        <option value="{{ $v->id }}" @if(!empty(old('vendor_id')) && old('vendor_id') == $v->id) selected="selected" @endif>{{ $v->first_name . ' ' . $v->last_name }}</option>
                     @endforeach
                 @endif
             </select>
@@ -71,7 +75,7 @@
     <div class="col-md-6">
         <div class="form-group">
             <label for="productId" class="onex-form-label">Product: <em>*</em></label>
-            <select name="product_id" class="form-control onex-select2" id="productId" required="required">
+            <select name="product_id" class="form-control onex-select2" id="productId" required="required" data-placeholder="Select a product">
                 <option value=""></option>
                 @if(!empty($productVariants) && count($productVariants))
                     @foreach($productVariants as $k => $v)
@@ -95,7 +99,7 @@
     <div class="col-md-2">
         <div class="form-group">
             <label for="unitId" class="onex-form-label">Unit: <em>*</em></label>
-            <select name="unit_id" class="form-control" id="unitId" required="required" readonly="readonly">
+            <select name="unit_id" class="form-control" id="unitId" required="required" readonly="readonly" style="pointer-events: none;">
                 <option value="">Unit</option>
                 @if(!empty($units) && count($units))
                     @foreach($units as $k => $v)

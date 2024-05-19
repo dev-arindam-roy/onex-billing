@@ -33,7 +33,7 @@
     </div>
     <div class="col-md-4"></div>
 </div>
-<div class="row mt-2">
+<!-- div class="row mt-2">
     <div class="col-md-6">
         <div class="row">
             <div class="col-md-12 mt-1">
@@ -74,7 +74,7 @@
             <input type="number" class="form-control" name="display_order" min="1" max="999" @if($data->menu_visibility == 0) disabled="disabled" @endif value="{{ $data->display_order }}" />
         </div>
     </div>
-</div>
+</div -->
 <div class="row mt-3">
     <div class="col-md-8">
         <div class="form-group">

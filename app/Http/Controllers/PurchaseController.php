@@ -132,7 +132,8 @@ class PurchaseController extends Controller
                 return redirect()->back()
                     ->with('message_type', 'success')
                     ->with('message_title', 'Done!')
-                    ->with('message_text', 'New purchase entry has been created successfully');
+                    ->with('message_text', 'New purchase entry has been created successfully')
+                    ->withInput($request->only(['bill_no', 'received_date', 'batch_id', 'vendor_id']));
             }
         }
 

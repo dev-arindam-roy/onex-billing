@@ -195,6 +195,12 @@
                     <p>Stock Management<i class="right fas fa-angle-left"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route('stock.current') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'stock-current') active @endif">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Current Stock</p>
+                        </a>
+                    </li>
                     {{--<li class="nav-item">
                         <a href="{{ route('stock.in') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'stock-in') active @endif">
                             <i class="far fa-circle nav-icon"></i>
