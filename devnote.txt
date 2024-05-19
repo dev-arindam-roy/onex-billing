@@ -6,4 +6,10 @@ table
 
 purchase section code check & validate batch list based on status
 
-return back -> input -> in add purchase page 
+return back -> input -> in add purchase page
+
+online CDN convert to OFFLINE
+
+add to cart logic improvement
+
+in sale section => need to check the quantity checking. it should be with batch stock 

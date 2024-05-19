@@ -33,17 +33,17 @@
         <div class="form-group" id="bsDatePickerContainer">
             <label for="saleDate" class="onex-form-label">Sale Date: <em>*</em></label>
             <input type="text" name="sale_date" id="saleDate" class="form-control onex-datepicker" readonly="readonly" placeholder="Date" required="required" />
-            <input type="hidden" id="todayDateHidden" value="{{ date('Y/m/d') }}"/>
+            <input type="hidden" id="todayDateHidden" value="@if(Session::has('cart_info') && !empty(Session::get('cart_info'))) {{ date('Y/m/d', strtotime(Session::get('cart_info')['sale_date'])) }} @else {{ date('Y/m/d') }} @endif"/>
         </div>
     </div>
     <div class="col-md-6">
         <div class="form-group">
             <label for="customerId" class="onex-form-label">Select Customer: <em>*</em></label>
-            <select name="customer_id" class="form-control onex-select2" id="customerId" required="required" data-placeholder="Select a customer">
+            <select name="customer_id" class="form-control onex-select2" id="customerId" required="required" data-placeholder="Select a customer" @if(Session::has('cart_info') && !empty(Session::get('cart_info'))) readonly="readonly" style="pointer-events: none;" @endif>
                 <option value=""></option>
                 @if(!empty($customers) && count($customers))
                     @foreach($customers as $k => $v)
-                        <option value="{{ $v->hash_id }}">{{ $v->first_name }} {{ $v->last_name }} - {{ $v->phone_number }}</option>
+                        <option value="{{ $v->hash_id }}" @if(Session::has('cart_info') && !empty(Session::get('cart_info')) && Session::get('cart_info')['customer']->hash_id == $v->hash_id) selected="selected" @endif>{{ $v->first_name }} {{ $v->last_name }} - {{ $v->phone_number }}</option>
                     @endforeach
                 @endif
             </select>
@@ -160,13 +160,29 @@
                     <th>CGST</th>
                     <th>SGST</th>
                     <th>IGST</th>
-                    <th>TOTAL</th>
+                    <th style="width:100px;">TOTAL</th>
                     <th>#</th>
                 </tr>
             </thead>
             <tbody>
                 
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="9" style="text-align:right;"><strong>Total Amount:</strong></td>
+                    <td colspan="2" id="totalCartAmount">0.00</td>
+                </tr>
+                <tr>
+                    <td colspan="9" style="text-align:right;"><strong>Discount:</strong></td>
+                    <td colspan="2" style="width:100px;">
+                        <input type="number" id="totalCartDiscount" min="0" value="0.00" style="width:100px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="9" style="text-align:right;"><strong>Total Payable Amount:</strong></td>
+                    <td colspan="2" id="totalPayableCartAmount" style="font-weight: 600;">0.00</td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>

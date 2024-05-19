@@ -11,6 +11,8 @@ use App\Models\PurchaseProduct;
 use App\Models\BatchProducts;
 use App\Models\User;
 use App\Models\Unit;
+use App\Models\Sale;
+use App\Models\SaleProduct;
 use Session;
 use Helper;
 
@@ -216,6 +218,7 @@ class SaleController extends Controller
         $priceInfo['total_igst_amount'] = ($isIgst && !empty($priceInfo['igst_rate'])) ? round((($salePrice * $priceInfo['igst_rate']) / 100) * $productQty) : 0;
 
         $cart = !empty(Session::get('cart')) ? Session::get('cart') : [];
+        $cartInfo = !empty(Session::get('cart_info')) ? Session::get('cart_info') : [];
         $cart[$productId] = array(
             'product_info' => $cartProduct,
             'customer_info' => $cartCustomer,
@@ -229,7 +232,12 @@ class SaleController extends Controller
             'batch_product_table_id' => $batchProductTabId,
             'purchase_product_table_id' => $purchaseProductTabId
         );
+        $cartInfo['customer'] = $cartCustomer;
+        $cartInfo['sale_date'] = $saleDate;
+        $cartInfo['invoice_no'] = $invoiceNo;
+
         Session::put('cart', $cart);
+        Session::put('cart_info', $cartInfo);
 
         return response()->json(array('isSuccess' => true, 'message' => 'Item has been added to cart successfully', 'data' => $cart));
     }
@@ -237,6 +245,7 @@ class SaleController extends Controller
     public function cancelNewSale(Request $request)
     {
         Session::forget('cart');
+        Session::forget('cart_info');
         return redirect()
             ->back()
             ->with('message_type', 'success')
@@ -256,9 +265,168 @@ class SaleController extends Controller
         Session::put('cart', $cart);
         if (Session::has('cart') && (empty(Session::get('cart')) || count(Session::get('cart')) == 0)) {
             Session::forget('cart');
+            Session::forget('cart_info');
             $cart = !empty(Session::get('cart')) ? Session::get('cart') : [];
         }
 
         return response()->json(array('isSuccess' => true, 'message' => 'Item has been removed from cart successfully', 'data' => $cart));
+    }
+
+    public function createSave(Request $request)
+    {
+        if (!Session::has('cart') || empty(Session::get('cart'))) {
+            Session::forget('cart');
+            Session::forget('cart_info');
+            return response()->json(array('isSuccess' => false, 'message' => 'Empty sale list'));
+        }
+        if (!Session::has('cart_info') || empty(Session::get('cart_info'))) {
+            Session::forget('cart');
+            Session::forget('cart_info');
+            return response()->json(array('isSuccess' => false, 'message' => 'Empty sale list'));
+        }
+
+        $cart = !empty(Session::get('cart')) ? Session::get('cart') : [];
+        $cartInfo = !empty(Session::get('cart_info')) ? Session::get('cart_info') : [];
+
+        if (empty($cartInfo['customer'])) {
+            return response()->json(array('isSuccess' => false, 'message' => 'Customer information not found'));
+        }
+
+        $customer = User::where('hash_id', $cartInfo['customer']->hash_id)->first();
+
+        if (empty($customer)) {
+            return response()->json(array('isSuccess' => false, 'message' => 'Customer information not found'));
+        }
+
+        $totalDiscount = !empty($request->input('total_discount')) ? $request->input('total_discount') : 0;
+
+        $isSaleSave = $isSaleProductSave = false;
+        $saleId = null;
+
+        $sale = new Sale();
+        $sale->invoice_no = Helper::createSaleInvoiceNo();
+        $sale->hash_id = (string) Str::uuid();
+        $sale->customer_id = $customer->id;
+        $sale->sale_date = !empty($cartInfo['sale_date']) ? date('Y-m-d', strtotime($cartInfo['sale_date'])) : date('Y-m-d');
+        $sale->total_discount = $totalDiscount;
+
+        $payableAmount = $totalAmount = $totalGstAmount = $totalSgstAmount = $totalCgstAmount = $totalIgstAmount = 0;
+
+        foreach ($cart as $productId => $v) {
+            if (is_array($v['price_info']) && !empty($v['price_info']) && count($v['price_info'])) {
+                $totalAmount = $totalAmount + (!empty($v['price_info']['total_amount']) ? $v['price_info']['total_amount'] : 0); 
+                $totalGstAmount = $totalGstAmount + (!empty($v['price_info']['total_gst_amount']) ? $v['price_info']['total_gst_amount'] : 0);
+                $totalSgstAmount = $totalSgstAmount + (!empty($v['price_info']['total_sgst_amount']) ? $v['price_info']['total_sgst_amount'] : 0);
+                $totalCgstAmount = $totalCgstAmount + (!empty($v['price_info']['total_cgst_amount']) ? $v['price_info']['total_cgst_amount'] : 0);
+                $totalIgstAmount = $totalIgstAmount + (!empty($v['price_info']['total_igst_amount']) ? $v['price_info']['total_igst_amount'] : 0); 
+            }
+        }
+
+        $payableAmount = $totalAmount - $totalDiscount;
+
+        $sale->total_amount = $totalAmount;
+        $sale->total_gst_amount = $totalGstAmount;
+        $sale->total_sgst_amount = $totalSgstAmount;
+        $sale->total_cgst_amount = $totalCgstAmount;
+        $sale->total_igst_amount = $totalIgstAmount;
+        $sale->payable_amount = $payableAmount;
+
+        if ($sale->save()) {
+            $saleId = $sale->id;
+            $isSaleSave = true;
+            $saleProduct = new SaleProduct();
+            $saleProduct->sale_id = $saleId;
+            $saleProduct->invoice_no = $sale->invoice_no;
+            $saleProduct->customer_id = $sale->customer_id;
+
+            foreach ($cart as $productId => $v) {
+                $saleProduct->product_id = $productId;
+                $saleProduct->batch_id = $v['batch_id'];
+                $saleProduct->product_qty = $v['quantity'];
+                $saleProduct->unit_id = $v['unit_id'];
+                if (is_array($v['price_info']) && !empty($v['price_info']) && count($v['price_info'])) {
+                    $saleProduct->sale_price = $v['price_info']['unit_price'];
+                    $saleProduct->gst_rate = $v['price_info']['gst_rate'];
+                    $saleProduct->sgst_amount = $v['price_info']['total_sgst_amount'];
+                    $saleProduct->cgst_amount = $v['price_info']['total_cgst_amount'];
+                    $saleProduct->igst_amount = $v['price_info']['total_igst_amount'];
+                    $saleProduct->unit_total_amount = $v['price_info']['total_amount'];
+                    $saleProduct->total_gst_amount = $v['price_info']['total_gst_amount'];
+                }
+
+                if (!empty($v['purchase_product_table_id'])) {
+                    $purchaseProduct = PurchaseProduct::find($v['purchase_product_table_id']);
+                    if (!empty($purchaseProduct)) {
+                        $saleProduct->purchase_id = $purchaseProduct->purchase_id;
+                        $saleProduct->vendor_id = $purchaseProduct->vendor_id;
+                    }
+                }
+            }
+
+            if ($saleProduct->save()) {
+                $isSaleProductSave = true;
+            }
+
+            if ($isSaleSave && $isSaleProductSave && !empty($saleId)) {
+                if (self::stockOutCalculation($saleId)) {
+                    Session::forget('cart');
+                    Session::forget('cart_info');
+                    return response()->json(array('isSuccess' => true, 'message' => 'Sale has been created successfully', 'data' => $sale));
+                } else {
+                    Sale::find($saleId)->delete();
+                    SaleProduct::where('sale_id', $saleId)->delete();
+                    self::stockOutCalculationRevert($saleId);
+                    return response()->json(array('isSuccess' => false, 'message' => 'Something went wrong. Stock dispute found by system'));
+                }
+            } else {
+                Sale::find($saleId)->delete();
+                SaleProduct::where('sale_id', $saleId)->delete();
+                return response()->json(array('isSuccess' => false, 'message' => 'Something went wrong. Contact to administrator'));
+            }
+        }
+
+        return response()->json(array('isSuccess' => false, 'message' => 'Something went wrong. Contact to administrator'));
+    }
+
+    public static function stockOutCalculation($saleId)
+    {
+        $isAllOperationDone = false;
+        $cart = !empty(Session::get('cart')) ? Session::get('cart') : [];
+        foreach ($cart as $productId => $v) {
+            if (!empty($v['quantity']) && !empty($v['batch_product_table_id'])) {
+                $batchProducts = BatchProducts::find($v['batch_product_table_id']);
+                if (!empty($batchProducts)) {
+                    if ($batchProducts->product_qty >= $v['quantity']) {
+                        $restQty = $batchProducts->product_qty - $v['quantity'];
+                    } else {
+                        $restQty = 0;
+                    }
+                    $batchProducts->product_qty = $restQty;
+                    if ($batchProducts->save()) {
+                        BatchProducts::where('status', 1)->where('product_qty', '<=', 0)->update(['status' => 3]);
+                        $productVariants = ProductVariants::find($productId);
+                        if (!empty($productVariants)) {
+                            if ($productVariants->available_stock >= $v['quantity']) {
+                                $restQty = $productVariants->available_stock - $v['quantity'];
+                            } else {
+                                $restQty = 0;
+                            }
+                            $productVariants->available_stock = $restQty;
+                            $productVariants->save();
+                            $isAllOperationDone = true;
+                        }
+                    }
+                }
+            }
+        }
+        return $isAllOperationDone;
+    }
+
+    public static function stockOutCalculationRevert($saleId)
+    {
+        //revert calculatuon here
+        //or
+        //need to use DB Transaction
+        return true;
     }
 }

@@ -377,6 +377,7 @@ $(document).ready(function() {
     function cartTableRenderDynamically(onexcartObj) {
         if (onexcartObj.length) {
             let slNo = 1;
+            let sumTotal = parseFloat(0);
             $('#addToCartTable').find('tbody').html('');
             $('#cartItemCount').html(`(${onexcartObj.length})`);
             onexcartObj.map((item, index) => {
@@ -403,8 +404,19 @@ $(document).ready(function() {
                         </td>
                     </tr>
                 `;
+                sumTotal = sumTotal + parseFloat(item.price_info.total_amount);
+                let totalDiscount = parseFloat(0);
+                let totalPayable = sumTotal;
+                if (document.getElementById('totalCartDiscount').value != '') {
+                    if (parseFloat(document.getElementById('totalCartDiscount').value) > 0) {
+                        totalDiscount = parseFloat(document.getElementById('totalCartDiscount').value);
+                    }
+                }
+                totalPayable = sumTotal - totalDiscount;
                 slNo++;
                 $('#addToCartTable').find('tbody').append(cartItemTr);
+                $('#addToCartTable tfoot').find('td#totalCartAmount').html(`${sumTotal.toFixed(2)}`);
+                $('#addToCartTable tfoot').find('td#totalPayableCartAmount').html(`${Math.round(totalPayable).toFixed(2)}`);
             });
         }
     }
@@ -563,6 +575,7 @@ $(document).ready(function() {
 
     $('body').on('click', '#createSaleBtn', function() {
         if ($('#invoiceNo').valid() && $('#saleDate').valid() && $('#customerId').valid()) {
+            displayLoading();
             saleProcess();
         } else {
             displayAlert('error', 'Oops!', 'Please check all the required fields');
@@ -570,7 +583,38 @@ $(document).ready(function() {
     });
 
     function saleProcess() {
-        console.log('xxxxxxxx');
+        $.ajax({
+            type: "POST",
+            url: "{{ route('sale.save') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "total_discount": document.getElementById('totalCartDiscount').value
+            },
+            cache: false,
+            beforeSend: function() {
+
+            },
+            success: function(responseData) {
+                closeSwal();
+                if(responseData) {
+                    if(responseData.isSuccess == true && (responseData.data !== null || responseData.data !== '')) {
+                        toastr.success(responseData.message, 'Done!');
+                        displayAlert('success', 'Done!', `Sale has been created successfullt<br/><strong>Invoice No: ${responseData.data.invoice_no}</strong><br/>Please Wait...`, false);
+                        setTimeout(() => {
+                            window.location.href = "{{ route('sale.index') }}";
+                        }, 3000);
+                    }
+                    if(responseData.isSuccess == false) {
+                        toastr.error(responseData.message, 'Sorry!');
+                    }
+                } else {
+                    displayAlert('error', 'SERVER ERROR!', 'Something Went Wrong <br/> Please Try Again Later');
+                }
+            },
+            error: function(errorData) {
+                displayAlert('error', 'SERVER ERROR!', 'Something Went Wrong <br/> Please Try Again Later');
+            }
+        })
     }
 
     $('body').on('click', '.cart-item-delete-btn', function(e) {
@@ -657,5 +701,27 @@ $(document).ready(function() {
         displayLoading();
         window.location.reload();
     });
+
+    document.getElementById('totalCartDiscount').addEventListener("blur", invoiceDiscountCalculation);
+
+    function invoiceDiscountCalculation() {
+        let discount = parseFloat(0);
+        if (document.getElementById('totalCartDiscount').value != '') {
+            if (parseFloat(document.getElementById('totalCartDiscount').value) > 0) {
+                discount = parseFloat(document.getElementById('totalCartDiscount').value);
+            }
+        } else {
+            document.getElementById('totalCartDiscount').value = parseFloat(0).toFixed(2);
+        }
+        let totalAmount = parseFloat(document.getElementById('totalCartAmount').innerHTML);
+        if (discount > totalAmount) {
+            displayAlert('error', 'Wrong Discount!', 'Discount Price Should Be Less Than ToTal Amount<br/>Please Check...');
+            document.getElementById('totalCartDiscount').value = parseFloat(0).toFixed(2);
+            document.getElementById('totalPayableCartAmount').innerHTML = Math.round(totalAmount).toFixed(2);
+        } else {
+            let totalPayable = Math.round(totalAmount - discount);
+            document.getElementById('totalPayableCartAmount').innerHTML = totalPayable.toFixed(2);
+        }
+    }
 });
 </script>
