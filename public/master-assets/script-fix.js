@@ -187,6 +187,50 @@ function loadingPlaceholder() {
     </div>`;
 }
 
+function cartTableLoadingPlaceholder() {
+    return `
+        <tr>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+        </tr>
+        <tr>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+        </tr>
+        <tr>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+            <td class="loading"><div class="bar"></div></td>
+        </tr>
+    `;
+}
+
 function select2OptionProductImage(imagePath, image) {
     if (image && imagePath) {
         return `<img src="${imagePath}/${image}" class="select2-option-avatar-image" />`;

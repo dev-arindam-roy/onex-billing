@@ -260,8 +260,11 @@ Route::prefix('auth')->group(function () {
                         Route::get('/', 'index')->name('index');
                         Route::get('/create', 'createNewSale')->name('add');
                         Route::post('/create', 'createSave')->name('save');
+                        Route::post('/add-item', 'addItem')->name('add-item');
+                        Route::post('/remove-item', 'removeItem')->name('remove-item');
                         Route::post('/get-product-batches', 'getProductBatches')->name('get-product-batches');
                         Route::post('/get-purchase-product', 'getPurchaseProduct')->name('get-purchase-product');
+                        Route::get('/cancel', 'cancelNewSale')->name('cancel');
                     });
                 });
             });

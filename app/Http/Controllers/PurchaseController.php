@@ -185,7 +185,7 @@ class PurchaseController extends Controller
         $batchProductsEntry->product_qty = $requestObj->input('product_qty');
         $batchProductsEntry->purchase_price = $requestObj->input('purchase_price');
         $batchProductsEntry->sale_price = $requestObj->input('sale_price');
-        $batchProducts->status = 1;
+        $batchProductsEntry->status = 1;
         $batchProductsEntry->save();
         Batch::where('id', $requestObj->input('batch_id'))->update(['status' => 1]);
         return $batchProductsEntry;

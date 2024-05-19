@@ -205,7 +205,7 @@ $(document).ready(function() {
                     }
                 },
                 error: function(errorData) {
-                    displayAlert('error', 'SERVER ERROR!', 'Something Went Wrong');
+                    displayAlert('error', 'SERVER ERROR!', 'Something Went Wrong <br/> Please Try Again Later');
                 }
             });
         }
@@ -262,7 +262,7 @@ $(document).ready(function() {
                     }
                 },
                 error: function(errorData) {
-                    displayAlert('error', 'SERVER ERROR!', 'Something Went Wrong');
+                    displayAlert('error', 'SERVER ERROR!', 'Something Went Wrong <br/> Please Try Again Later');
                 }
             });
         }
@@ -296,11 +296,14 @@ $(document).ready(function() {
                             } else {
                                 $('#currentStock').val(responseData.data.product_variant_info.available_stock);
                                 $('#batchProductId').val(responseData.data.batch_product_info.id);
+                                $('#purchaseProductId').val(responseData.data.id);
                                 $('#batchPurchasePrice').val(responseData.data.batch_product_info.purchase_price);
                                 $('#batchSalePrice').val(responseData.data.batch_product_info.sale_price);
                                 $('#batchQuantity').val(responseData.data.batch_product_info.product_qty);
 
-                                if (parseFloat(responseData.data.sale_price) > 0) {
+                                if (parseFloat(responseData.data.batch_product_info.sale_price) > 0) {
+                                    $('#salePrice').val(responseData.data.batch_product_info.sale_price);
+                                } else if (parseFloat(responseData.data.sale_price) > 0) {
                                     $('#salePrice').val(responseData.data.sale_price);
                                 } else {
                                     $('#salePrice').val(responseData.data.product_variant_info.price);
@@ -328,7 +331,7 @@ $(document).ready(function() {
                     }
                 },
                 error: function(errorData) {
-                    displayAlert('error', 'SERVER ERROR!', 'Something Went Wrong');
+                    displayAlert('error', 'SERVER ERROR!', 'Something Went Wrong <br/> Please Try Again Later');
                 }
             });
         }
@@ -348,10 +351,62 @@ $(document).ready(function() {
         salePriceCalculate();
     });
 
+    /*Page Load: Cart Table Render By Session Data*/
     loadCartTable();
     function loadCartTable() {
-        initCartTable();
-        $('#createSaleBtn').attr('disabled', 'disabled');
+        let onexcart = [];
+        let sessionCart = document.getElementById('cartTableJson').value;
+        if (sessionCart && sessionCart != '') {
+            onexcart = Object.values(JSON.parse(sessionCart));
+        }
+        //console.log(onexcart);
+        if (onexcart.length > 0) {
+            $('#addToCartTable').find('tbody').empty('').html(cartTableLoadingPlaceholder());
+            setTimeout(() => {
+                cartTableRenderDynamically(onexcart);
+                cartActionButtons();
+            }, 3000);
+        } else {
+            initCartTable();
+            $('#createSaleBtn').attr('disabled', 'disabled');
+            cartActionButtons();
+        }
+    }
+
+    /*Cart Table Creation Dynamically - Page load (Session Data) & Ajax Call*/
+    function cartTableRenderDynamically(onexcartObj) {
+        if (onexcartObj.length) {
+            let slNo = 1;
+            $('#addToCartTable').find('tbody').html('');
+            $('#cartItemCount').html(`(${onexcartObj.length})`);
+            onexcartObj.map((item, index) => {
+                let cartItemTr = `
+                    <tr class="cart-item" id="cartItem-${index}">
+                        <td>${slNo}</td>
+                        <td>
+                            <span class="cart-item-product-name">${item.product_info.name}</span><br/>
+                            <span class="cart-item-product-barcode">${item.product_info.barcode_no}</span><br/>
+                            <span class="cart-item-product-brand">${item.product_info.product_brand.name}</span><br/>
+                        </td>
+                        <td>${item.product_info.hsn_code ?? ''}</td>
+                        <td>${item.price_info.item_qty}</td>
+                        <td>${parseFloat(item.price_info.unit_price).toFixed(2)}</td>
+                        <td>${parseFloat(item.price_info.gst_rate).toFixed(2)}</td>
+                        <td>${parseFloat(item.price_info.total_sgst_amount).toFixed(2)}</td>
+                        <td>${parseFloat(item.price_info.total_cgst_amount).toFixed(2)}</td>
+                        <td>${parseFloat(item.price_info.total_igst_amount).toFixed(2)}</td>
+                        <td>${parseFloat(item.price_info.total_amount).toFixed(2)}</td>
+                        <td>
+                            <a href="javascript:void(0);" class="cart-item-delete-btn" id="cartItemDelBtn-${index}" data-cart-product="${item.product_info.id}">
+                                <i class="fas fa-trash-alt text-danger"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `;
+                slNo++;
+                $('#addToCartTable').find('tbody').append(cartItemTr);
+            });
+        }
     }
 
     /*Cart Table Init Load*/
@@ -360,7 +415,9 @@ $(document).ready(function() {
             <tr class="dummy-tr">
                 <td>1.</td>
                 <td>--</td>
+                <td>--</td>
                 <td>0</td>
+                <td>0.00</td>
                 <td>0.00</td>
                 <td>0.00</td>
                 <td>0.00</td>
@@ -371,7 +428,9 @@ $(document).ready(function() {
             <tr class="dummy-tr">
                 <td>2.</td>
                 <td>--</td>
+                <td>--</td>
                 <td>0</td>
+                <td>0.00</td>
                 <td>0.00</td>
                 <td>0.00</td>
                 <td>0.00</td>
@@ -399,6 +458,7 @@ $(document).ready(function() {
         $('#batchPurchasePrice').val('');
         $('#batchSalePrice').val('');
         $('#batchQuantity').val('');
+        $('#purchaseProductId').val('');
     }
 
     /*Price Calculation With GST*/
@@ -445,18 +505,60 @@ $(document).ready(function() {
         }
     });
 
-    /*Ajax: Add Item To Cart Table - Session Process*/
+    /*Ajax Call: Add New Item To Cart Table - Using Session Process*/
     function addItemToCartTable() {
-        $('.cart-reload-btn').removeClass('d-none');
-        $('#cancleSaleBtn').removeClass('d-none');
-        $('#emptyCartItemBtn').removeClass('d-none');
-        $('#createSaleBtn').removeAttr('disabled');
-        $('#addItemBtn').removeAttr('disabled');
+        displayLoading();
+        $.ajax({
+            type: $('#frmx').attr('method'),
+            url: "{{ route('sale.add-item') }}",
+            data: $('#frmx').serialize(),
+            cache: false,
+            beforeSend: function() {
 
-        $('#productId').val('').trigger('change');
-        $('#batchId').empty().html("<option value=''></option>").trigger("change");
-        initPriceCalculation();
-        initItem();
+            },
+            success: function(responseData) {
+                closeSwal();
+                $('#addItemBtn').removeAttr('disabled');
+                if(responseData) {
+                    if(responseData.isSuccess == true && (responseData.data !== null || responseData.data !== '')) {
+                        let onexcart = Object.values(responseData.data);
+                        if (onexcart.length > 0) {
+                            $('#addToCartTable').find('tbody').empty('').html(cartTableLoadingPlaceholder());
+                            setTimeout(() => {
+                                cartTableRenderDynamically(onexcart);
+                                toastr.success(responseData.message, 'Done!');
+                                cartActionButtons();
+                            }, 3000);
+                            $('#productId').val('').trigger('change');
+                            $('#batchId').empty().html("<option value=''></option>").trigger("change");
+                            initPriceCalculation();
+                            initItem();
+                        } else {
+                            displayAlert('error', 'SERVER ERROR!', 'Something Went Wrong <br/> Please Try Again or Reload The Page');
+                        }
+                    }
+
+                    if(responseData.isSuccess == false) {
+                        toastr.error(responseData.message, 'Sorry!');
+                    }
+                }
+            },
+            error: function(errorData) {
+                displayAlert('error', 'SERVER ERROR!', 'Something Went Wrong <br/> Please Try Again Later');
+            }
+        });
+    }
+
+    function cartActionButtons() {
+        if($('#addToCartTable tbody').find('tr.cart-item').length > 0) {
+            $('.cart-reload-btn').removeClass('d-none');
+            $('#cancleSaleBtn').removeClass('d-none');
+            $('#createSaleBtn').removeAttr('disabled');
+        } else {
+            $('.cart-reload-btn').addClass('d-none');
+            $('#cancleSaleBtn').addClass('d-none');
+            $('#createSaleBtn').attr('disabled', 'disabled');
+        }
     }
 
     $('body').on('click', '#createSaleBtn', function() {
@@ -470,5 +572,90 @@ $(document).ready(function() {
     function saleProcess() {
         console.log('xxxxxxxx');
     }
+
+    $('body').on('click', '.cart-item-delete-btn', function(e) {
+        e.preventDefault();
+        if($(this).data('cart-product') != '' && $(this).attr('id') != '') {
+            let _productId = $(this).data('cart-product');
+            let _thisTrId = $(this).attr('id');
+            Swal.fire({
+                title: 'Want to Remove?',
+                text: "Are you want to remove this item from list",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Remove it!',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    displayLoading();
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('sale.remove-item') }}",
+                        data: {
+                            "product_id": _productId,
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        cache: false,
+                        beforeSend: function() {
+
+                        },
+                        success: function(responseData) {
+                            closeSwal();
+                            if(responseData) {
+                                if(responseData.isSuccess == true && (responseData.data !== null || responseData.data !== '')) {
+                                    let onexcart = Object.values(responseData.data);
+                                    if (onexcart.length > 0) {
+                                        $('#addToCartTable').find('tbody').empty('').html(cartTableLoadingPlaceholder());
+                                        setTimeout(() => {
+                                            cartTableRenderDynamically(onexcart);
+                                            toastr.success(responseData.message, 'Done!');
+                                            cartActionButtons();
+                                        }, 3000);
+                                    } else {
+                                        displayAlert('info', 'Empty Cart!', 'Your Sale Cart Is Empty <br/> Please Wait...', false);
+                                        setTimeout(() => {
+                                            window.location.reload();
+                                        }, 2000);
+                                    }
+                                }
+
+                                if(responseData.isSuccess == false) {
+                                    toastr.error(responseData.message, 'Sorry!');
+                                }
+                            }
+                        },
+                        error: function(errorData) {
+                            displayAlert('error', 'SERVER ERROR!', 'Something Went Wrong <br/> Please Try Again Later');
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+    $('body').on('click', '#cancleSaleBtn', function() {
+        Swal.fire({
+            title: 'Want to Cancel?',
+            text: "Are you want to cancel this sale",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Cancel it!',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if(result.isConfirmed) {
+                displayLoading();
+                window.location.href = "{{ route('sale.cancel') }}";
+            }
+        });
+    });
+
+    $('body').on('click', '.cart-reload-btn', function() {
+        displayLoading();
+        window.location.reload();
+    });
 });
 </script>

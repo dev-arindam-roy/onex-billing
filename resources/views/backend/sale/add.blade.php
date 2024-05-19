@@ -14,12 +14,13 @@
 @section('content_title', 'Add New Sale & Stock Out')
 @section('content_buttons')
     <button type="button" class="btn btn-success btn-sm cart-reload-btn d-none"><i class="fas fa-sync"></i></button>
-    <button type="button" class="btn btn-warning btn-sm text-danger d-none" id="cancleSaleBtn"><i class="fas fa-ban text-danger"></i> Cancel Sale </button>
+    <button type="button" class="btn btn-danger btn-sm d-none" id="cancleSaleBtn"><i class="fas fa-ban"></i> Cancel Sale </button>
     <a href="{{ route('sale.index') }}" class="btn btn-primary btn-sm"><i class="fas fa-cubes"></i> All Sales</a>
 @endsection
 
 @section('content_body')
-<form name="frm" id="frmx" action="{{ route('sale.save') }}" method="POST" enctype="multipart/form-data">
+<span class="placeholder col-6"></span>
+<form name="frm" id="frmx" method="POST" enctype="multipart/form-data">
 @csrf
 <div class="row">
     <div class="col-md-3">
@@ -124,19 +125,26 @@
 </div>
 <div class="row">
     <div class="col-md-4">
-        <button type="button" class="btn btn-primary" id="addItemBtn"><i class="fas fa-plus"></i> Add Item</button>
-        <button type="button" class="btn btn-success cart-reload-btn d-none"><i class="fas fa-sync"></i></button>
-        <button type="button" class="btn btn-danger d-none" id="emptyCartItemBtn"><i class="fas fa-trash-alt"></i> Delete All</button>
+        <button type="button" class="btn btn-primary btn-sm" id="addItemBtn"><i class="fas fa-plus"></i> Add Item</button>
+        <button type="button" class="btn btn-success btn-sm cart-reload-btn d-none"><i class="fas fa-sync"></i></button>
+    </div>
+    <div class="col-md-8" style="text-align:right;">
+        <div style="color: #a5a5a5; margin-top: 12px; margin-right: 2px; font-weight: 600;">Items: <span id="cartItemCount">({{ !empty(Session::get('cart')) ? count(Session::get('cart')) : 0 }})</span></div>
     </div>
 </div>
-</form>
 
 <!-- For Item Entry In Add To Cart Table -->
-<input type="hidden" id="currentStock" />
-<input type="hidden" id="batchProductId" />
-<input type="hidden" id="batchPurchasePrice" />
-<input type="hidden" id="batchSalePrice" />
-<input type="hidden" id="batchQuantity" />
+<input type="hidden" name="hidden_current_stock" id="currentStock" />
+<input type="hidden" name="hidden_purchase_product_id" id="purchaseProductId" />
+<input type="hidden" name="hidden_batch_product_id" id="batchProductId" />
+<input type="hidden" name="hidden_batch_purchase_price" id="batchPurchasePrice" />
+<input type="hidden" name="hidden_batch_sale_price" id="batchSalePrice" />
+<input type="hidden" name="hidden_batch_quantity" id="batchQuantity" />
+</form>
+
+
+<!-- Cart Table JSON From SESSION -->
+<input type="hidden" id="cartTableJson" @if(Session::has('cart') && !empty(Session::get('cart'))) value="{{ json_encode(Session::get('cart')) }}" @endif />
 
 <div class="row mt-2">
     <div class="col-md-12">
@@ -144,9 +152,11 @@
             <thead>
                 <tr>
                     <th>SL</th>
-                    <th>PRODUCT INFO</th>
+                    <th>PRODUCT</th>
+                    <th>HSN</th>
                     <th>QTY</th>
                     <th>UNIT PRICE</th>
+                    <th>GST</th>
                     <th>CGST</th>
                     <th>SGST</th>
                     <th>IGST</th>
