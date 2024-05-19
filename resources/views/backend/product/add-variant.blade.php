@@ -148,7 +148,7 @@
 <div class="row">
     <div class="col-md-4">
         <div class="form-group">
-            <label for="hsnCode" class="onex-form-label">HSN Code:</label>
+            <label for="hsnCode" class="onex-form-label">HSN Code: <em>*</em></label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
@@ -159,7 +159,7 @@
     </div>
     <div class="col-md-4">
         <div class="form-group">
-            <label for="gstRate" class="onex-form-label">GST Rate (%):</label>
+            <label for="gstRate" class="onex-form-label">GST Rate (%): <em>*</em></label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>
@@ -274,6 +274,11 @@ $(document).ready(function() {
                 min: 0
             },
             gst_rate: {
+                required: true,
+                number: true
+            },
+            hsn_code: {
+                required: true,
                 number: true
             }
         },
@@ -325,7 +330,12 @@ $(document).ready(function() {
                 min: 'Enter the discount amount'
             },
             gst_rate: {
+                required: 'Please enter gst rate',
                 number: 'Enter gst rate'
+            },
+            hsn_code: {
+                required: 'Please enter HSN code',
+                number: true
             }
         },
         errorPlacement: function (error, element) {
