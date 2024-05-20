@@ -65,15 +65,16 @@
                     <td>{{ date('d-m-Y', strtotime($value->created_at)) }}</td>
                     <td>{{ !empty($value->updated_at) ? date('d-m-Y', strtotime($value->updated_at)) : date('d-m-Y', strtotime($value->created_at)) }}</td>
                     <td>
+                        <a href="{{ route('sale.bill', array('id' => $value->hash_id)) }}"><i class="fas fa-file-invoice text-primary"></i></a>
                         {{-- <a href="{{ route('purchase.edit-batch', array('id' => $value->hash_id)) }}" class="btn edit-batch-btn"><i class="far fa-edit text-success"></i></a> --}}
-                        <a href="{{ route('purchase.delete-purchase', array('id' => $value->hash_id)) }}" class="btn remove-purchase-btn"><i class="far fa-trash-alt text-danger"></i></a>
+                        {{-- <a href="{{ route('purchase.delete-purchase', array('id' => $value->hash_id)) }}" class="btn remove-purchase-btn"><i class="far fa-trash-alt text-danger"></i></a> --}}
                     </td>
                 </tr>
                 @php $sl++; @endphp
             @endforeach
         @else
             <tr>
-                <td colspan="12">No purchase found. Please create purchase and stock entry</td>
+                <td colspan="12">No sale found. Please create sale and stock out</td>
             </tr>
         @endif
         </tbody>

@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\Unit;
 use App\Models\Sale;
 use App\Models\SaleProduct;
+use App\Models\CompanyInformation;
 use Session;
 use Helper;
 
@@ -429,5 +430,44 @@ class SaleController extends Controller
         //or
         //need to use DB Transaction
         return true;
+    }
+
+    public function billPrint(Request $request, $id)
+    {
+        $dataBag = [];
+        $dataBag['sidebar_parent'] = 'sale_management';
+        $dataBag['sidebar_child'] = 'all-sales';
+
+        $dataBag['data'] = Sale::with([
+            'customerInfo' => function ($userInfoQry) {
+                $userInfoQry->with(['userProfile']);
+            },
+            'saleProducts' => function ($saleProductsQry) {
+                $saleProductsQry->with([
+                    'unitInfo',
+                    'productInfo' => function ($productInfoQry) {
+                        $productInfoQry->with(['productBrand']);
+                    } 
+                ]);
+            }
+        ])
+        ->where('hash_id', $id)
+        ->where('status', '!=', 3)
+        ->first();
+
+        if (empty($dataBag['data'])) {
+            abort(404);
+        }
+        
+        $dataBag['company_information'] = CompanyInformation::first();
+
+        if (empty($dataBag['company_information'])) {
+            return back()
+                ->with('message_type', 'error')
+                ->with('message_title', 'Company Information Not Found')
+                ->with('message_text', 'Please add company information first, thankyou!');
+        }
+        
+        return view('backend.sale.bill-print', $dataBag);
     }
 }

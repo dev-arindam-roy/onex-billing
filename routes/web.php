@@ -267,6 +267,8 @@ Route::prefix('auth')->group(function () {
                         Route::post('/get-product-batches', 'getProductBatches')->name('get-product-batches');
                         Route::post('/get-purchase-product', 'getPurchaseProduct')->name('get-purchase-product');
                         Route::get('/cancel', 'cancelNewSale')->name('cancel');
+
+                        Route::get('/bill-print/{id}', 'billPrint')->name('bill');
                     });
                 });
             });

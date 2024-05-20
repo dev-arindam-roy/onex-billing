@@ -19,7 +19,6 @@
 @endsection
 
 @section('content_body')
-<span class="placeholder col-6"></span>
 <form name="frm" id="frmx" method="POST" enctype="multipart/form-data">
 @csrf
 <div class="row">
