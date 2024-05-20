@@ -600,8 +600,9 @@ $(document).ready(function() {
                     if(responseData.isSuccess == true && (responseData.data !== null || responseData.data !== '')) {
                         toastr.success(responseData.message, 'Done!');
                         displayAlert('success', 'Done!', `Sale has been created successfullt<br/><strong>Invoice No: ${responseData.data.invoice_no}</strong><br/>Please Wait...`, false);
+                        let billRoute = document.getElementById('billPrintRoute').value.toString();
                         setTimeout(() => {
-                            window.location.href = "{{ route('sale.index') }}";
+                            window.location.href = billRoute.replace('_HASH_ID_', responseData.data.hash_id);
                         }, 3000);
                     }
                     if(responseData.isSuccess == false) {

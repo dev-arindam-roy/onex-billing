@@ -142,6 +142,9 @@ class UserController extends Controller
         $user->login_id = strtoupper(Str::random(12));
         $user->status = 1;
         if ($user->save()) {
+            if (!empty($request->input('full_address')) || !empty($request->input('gst_no'))) {
+                UserProfile::insert(['user_id' => $user->id, 'full_address' => $request->input('full_address'), 'gst_no' => $request->input('gst_no')]);
+            }
             UserRole::insert(['user_id' => $user->id, 'role_id' => $request->input('role_id')]);
             return response()->json(array('isSuccess' => true, 'message' => 'New customer has been created successfully', 'data' => $user));
         }

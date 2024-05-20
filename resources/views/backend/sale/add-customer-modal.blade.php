@@ -39,6 +39,22 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+              <div class="col-md-12">
+                  <div class="form-group">
+                      <label for="gstn" class="onex-form-label">GSTN:</label>
+                      <input type="text" name="gst_no" id="gstn" class="form-control" placeholder="Enter GSTN" autocomplete="new-gst-number"/>
+                  </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                  <div class="form-group">
+                      <label for="fullAddress" class="onex-form-label">Full Address:</label>
+                      <textarea name="full_address" id="fullAddress" class="form-control" placeholder="Enter Address..."></textarea>
+                  </div>
+              </div>
+            </div>
             <input type="hidden" name="user_category" id="userCategory" value="5"/>
             <input type="hidden" name="role_id" id="userRole" value="3"/>
         </form>

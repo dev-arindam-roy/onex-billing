@@ -196,6 +196,7 @@
     </div>
     <div class="col-md-6" style="text-align: right;">
         <button type="button" class="btn btn-success" id="createSaleBtn"><i class="fas fa-check"></i> Create Sale</button>
+        <input type="hidden" id="billPrintRoute" value="{{ route('sale.bill', array('id' => '_HASH_ID_')) }}" />
     </div>
 </div>
 @endsection
