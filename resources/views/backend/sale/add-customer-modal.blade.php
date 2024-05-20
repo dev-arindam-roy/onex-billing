@@ -42,16 +42,16 @@
             <div class="row">
               <div class="col-md-12">
                   <div class="form-group">
-                      <label for="gstn" class="onex-form-label">GSTN:</label>
-                      <input type="text" name="gst_no" id="gstn" class="form-control" placeholder="Enter GSTN" autocomplete="new-gst-number"/>
+                      <label for="customerGstn" class="onex-form-label">GSTN:</label>
+                      <input type="text" name="gst_no" id="customerGstn" class="form-control" placeholder="Enter GSTN" maxlength="16" autocomplete="new-gst-number"/>
                   </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-12">
                   <div class="form-group">
-                      <label for="fullAddress" class="onex-form-label">Full Address:</label>
-                      <textarea name="full_address" id="fullAddress" class="form-control" placeholder="Enter Address..."></textarea>
+                      <label for="customerFullAddress" class="onex-form-label">Full Address:</label>
+                      <textarea name="full_address" id="customerFullAddress" class="form-control" placeholder="Enter Address..."></textarea>
                   </div>
               </div>
             </div>

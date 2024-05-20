@@ -337,12 +337,13 @@ $(document).ready(function() {
         }
     });
 
+    /*Price Calculation*/
     $('#productQty').on('blur', function() {
         if ($(this).val() != '') {
             if (parseInt($(this).val()) <= parseInt($('#currentStock').val())) {
                 salePriceCalculate();
             } else {
-                initPriceCalculation();
+                //initPriceCalculation();
                 displayAlert('error', 'Oops!', 'Sale quantity is grater than current stock');
             }
         }
@@ -561,6 +562,7 @@ $(document).ready(function() {
         });
     }
 
+    /*Action Buttons Dynamic Rendering*/
     function cartActionButtons() {
         if($('#addToCartTable tbody').find('tr.cart-item').length > 0) {
             $('.cart-reload-btn').removeClass('d-none');
@@ -573,6 +575,7 @@ $(document).ready(function() {
         }
     }
 
+    /*Sale Entry: Process For a New Sale*/
     $('body').on('click', '#createSaleBtn', function() {
         if ($('#invoiceNo').valid() && $('#saleDate').valid() && $('#customerId').valid()) {
             displayLoading();
@@ -618,6 +621,7 @@ $(document).ready(function() {
         })
     }
 
+    /*Remove Item From Sale List*/
     $('body').on('click', '.cart-item-delete-btn', function(e) {
         e.preventDefault();
         if($(this).data('cart-product') != '' && $(this).attr('id') != '') {
@@ -680,6 +684,7 @@ $(document).ready(function() {
         }
     });
 
+    /*Cancel a Sale*/
     $('body').on('click', '#cancleSaleBtn', function() {
         Swal.fire({
             title: 'Want to Cancel?',

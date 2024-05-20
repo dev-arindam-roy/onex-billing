@@ -87,7 +87,8 @@ class SaleController extends Controller
                 'price', 
                 'old_price', 
                 'hsn_code', 
-                'gst_rate'
+                'gst_rate',
+                'available_stock'
             )
             ->where('status', '!=', 3)
             ->orderBy('id', 'desc')
