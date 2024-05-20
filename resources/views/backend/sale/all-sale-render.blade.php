@@ -3,14 +3,14 @@
         <thead>
             <tr>
                 <th style="min-width:60px;">SL</th>
-                <th style="min-width:150px;">Batch</th>
-                <th style="min-width:150px;">Vendor</th>
-                <th style="min-width:100px;">Bill No</th>
-                <th style="min-width:100px;">Amount</th>
+                <th style="min-width:150px;">Invoice No</th>
+                <th style="min-width:150px;">Customer Name</th>
+                <th style="min-width:150px;">Pay Amount</th>
+                <th style="min-width:130px;">GST</th>
                 <th style="min-width:100px;">Payment Status</th>
                 <th style="min-width:100px;">Payment Mode</th>
-                <th style="min-width:80px;">Entries</th>
-                <th style="min-width:100px;">Received At</th>
+                <th style="min-width:80px;">Products</th>
+                <th style="min-width:100px;">Sale At</th>
                 <th style="min-width:100px;">Created At</th>
                 <th style="min-width:100px;">Modified At</th>
                 <th style="min-width:100px;">Action</th>
@@ -22,13 +22,23 @@
             @foreach($data as $key => $value)
                 <tr>
                     <th>{{ $sl }}</th>
+                    <td>{{ $value->invoice_no }}</td>
                     <td>
-                        @if(!empty($value->batchInfo->batch_no)){{ $value->batchInfo->batch_no }}@endif
-                        @if(!empty($value->batchInfo->name))<br/><span><small>{{ $value->batchInfo->name }}</small></span>@endif
+                        @if(!empty($value->customerInfo->first_name)){{ $value->customerInfo->first_name }}@endif 
+                        @if(!empty($value->customerInfo->last_name)){{ $value->customerInfo->last_name }}@endif<br/>
+                        @if(!empty($value->customerInfo->phone_number)){{ $value->customerInfo->phone_number }}@endif
+                        @if(!empty($value->customerInfo->email_id))<br/>{{ $value->customerInfo->email_id }}@endif
                     </td>
-                    <td>@if(!empty($value->vendorInfo->first_name)){{ $value->vendorInfo->first_name }}@endif @if(!empty($value->vendorInfo->last_name)){{ $value->vendorInfo->last_name }}@endif</td>
-                    <td>{{ $value->bill_no }}</td>
-                    <td><span class="text-success">Bill: {{ $value->bill_amount }}</span><br/><span class="text-danger">Due: {{ $value->due_amount }}</span></td>
+                    <td>
+                        <span class="text-success" style="font-weight: 600;">Bill: {{ $value->payable_amount }}</span><br/>
+                        <span class="text-danger" style="font-weight: 600;">Due: {{ $value->due_amount }}</span>
+                    </td>
+                    <td>
+                        <span style="font-weight: 600;">{{ $value->total_gst_amount }}</span><br/>
+                        <span><small>SGST: {{ $value->total_sgst_amount }}</small></span><br/>
+                        <span><small>CGST: {{ $value->total_cgst_amount }}</small></span><br/>
+                        <span><small>IGST: {{ $value->total_igst_amount }}</small></span>
+                    </td>
                     <td>
                         @if($value->payment_status == 0)
                             <span class="text-danger">Pending</span>
@@ -50,8 +60,8 @@
                             @endif
                         @endif                        
                     </td>
-                    <td>{{ count($value->purchaseProducts) }}</td>
-                    <td>{{ date('d-m-Y', strtotime($value->received_date)) }}</td>
+                    <td>{{ count($value->saleProducts) }}</td>
+                    <td>{{ date('d-m-Y', strtotime($value->sale_date)) }}</td>
                     <td>{{ date('d-m-Y', strtotime($value->created_at)) }}</td>
                     <td>{{ !empty($value->updated_at) ? date('d-m-Y', strtotime($value->updated_at)) : date('d-m-Y', strtotime($value->created_at)) }}</td>
                     <td>

@@ -49,6 +49,10 @@ class PurchaseController extends Controller
             ->orderBy('id', 'desc')
             ->paginate($pagination);
 
+        if ($request->ajax()) {
+            return view('backend.purchase.all-purchase-render', $dataBag);
+        }
+
         return view('backend.purchase.index', $dataBag);
     }
 
@@ -246,6 +250,10 @@ class PurchaseController extends Controller
             })
             ->orderBy('id', 'desc')
             ->paginate($pagination);
+        
+        if ($request->ajax()) {
+            return view('backend.purchase.all-batches-render', $dataBag);
+        }
         return view('backend.purchase.all-batches', $dataBag);
     }
 

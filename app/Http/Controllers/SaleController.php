@@ -31,26 +31,27 @@ class SaleController extends Controller
         $dataBag['sidebar_child'] = 'all-sales';
         $pagination = !empty($request->get('pagination')) ? $request->get('pagination') : 25;
         $searchText = ($request->has('search_text') && !empty($request->get('search_text'))) ? $request->get('search_text') : null;  
-        $dataBag['data'] = Purchase::with([
-                'batchInfo',
-                'vendorInfo',
-                'purchaseProducts'
+        $dataBag['data'] = Sale::with([
+                'customerInfo',
+                'saleProducts'
             ])
             ->when(!empty($searchText), function ($query) use ($searchText) {
-                $query->whereHas('batchInfo', function ($batchQry) use ($searchText) {
-                    $batchQry->where('batch_no', $searchText)
-                        ->orWhere('name', 'LIKE', '%' . $searchText . '%')
-                        ->orWhere('bill_no', $searchText);
-                });
-                $query->orWhereHas('vendorInfo', function ($vendorQry) use ($searchText) {
-                    $vendorQry->where('first_name', 'like', '%' . $searchText . '%')
-                        ->orWhere('last_name', 'like', '%' . $searchText . '%');
+                $query->where('invoice_no', $searchText);
+                $query->orWhereHas('customerInfo', function ($batchQry) use ($searchText) {
+                    $batchQry->where('phone_number', $searchText)
+                        ->orWhere('first_name', 'LIKE', '%' . $searchText . '%')
+                        ->orWhere('last_name', 'LIKE', '%' . $searchText . '%')
+                        ->orWhere('email_id', 'LIKE', '%' . $searchText . '%');
                 });
                 return $query;
             })
             ->where('status', '!=', 3)
             ->orderBy('id', 'desc')
             ->paginate($pagination);
+
+        if ($request->ajax()) {
+            return view('backend.sale.all-sale-render', $dataBag);
+        }
 
         return view('backend.sale.index', $dataBag);
     }
@@ -330,16 +331,16 @@ class SaleController extends Controller
         $sale->total_cgst_amount = $totalCgstAmount;
         $sale->total_igst_amount = $totalIgstAmount;
         $sale->payable_amount = $payableAmount;
+        $sale->due_amount = $payableAmount;
 
         if ($sale->save()) {
-            $saleId = $sale->id;
             $isSaleSave = true;
-            $saleProduct = new SaleProduct();
-            $saleProduct->sale_id = $saleId;
-            $saleProduct->invoice_no = $sale->invoice_no;
-            $saleProduct->customer_id = $sale->customer_id;
-
+            $saleId = $sale->id;
             foreach ($cart as $productId => $v) {
+                $saleProduct = new SaleProduct();
+                $saleProduct->sale_id = $saleId;
+                $saleProduct->invoice_no = $sale->invoice_no;
+                $saleProduct->customer_id = $sale->customer_id;
                 $saleProduct->product_id = $productId;
                 $saleProduct->batch_id = $v['batch_id'];
                 $saleProduct->product_qty = $v['quantity'];
@@ -361,10 +362,10 @@ class SaleController extends Controller
                         $saleProduct->vendor_id = $purchaseProduct->vendor_id;
                     }
                 }
-            }
 
-            if ($saleProduct->save()) {
-                $isSaleProductSave = true;
+                if ($saleProduct->save()) {
+                    $isSaleProductSave = true;
+                }
             }
 
             if ($isSaleSave && $isSaleProductSave && !empty($saleId)) {
