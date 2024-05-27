@@ -46,7 +46,7 @@
                     <li class="nav-item">
                         <a href="{{ route('product.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'products') active @endif">
                             <i class="far fa-circle nav-icon"></i>
-                            <p>Products</p>
+                            <p>Base Products</p>
                         </a>
                     </li>
                     <li class="nav-item">

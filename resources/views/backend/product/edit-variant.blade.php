@@ -112,32 +112,73 @@
     </div>
     <div class="col-md-4">
         <div class="form-group">
-            <label for="productSku" class="onex-form-label">Product SKU: <em>*</em></label>
-            <input type="text" name="sku" id="productSku" class="form-control" placeholder="Enter Product SKU" required="required" value="{{ $product->sku }}"/>
+            <label for="productSku" class="onex-form-label">Item No: <em>*</em></label>
+            <input type="text" name="sku" id="productSku" class="form-control" placeholder="Enter Item No" required="required" value="{{ $product->sku }}"/>
         </div>
     </div>
     <div class="col-md-4"></div>
 </div>
+@php
+    $selectedColor = "";
+    $selectedSize = "";
+    if (!empty($product->metaFields) && count($product->metaFields)) {
+        foreach ($product->metaFields as $v) {
+            if (!empty($v->field_key == "color")) {
+                $selectedColor = $v->field_value;
+            }
+            if (!empty($v->field_key == "size")) {
+                $selectedSize = $v->field_value;
+            }
+        }
+    }
+@endphp
+<div class="row">
+    <div class="col-md-2">
+        <div class="form-group">
+            <label for="productColor" class="onex-form-label">Color: </label>
+            <select name="product_meta_fields[color]" id="productColor" class="form-control onex-select2" data-placeholder="Color">
+                <option value=""></option>
+                @if(!empty($all_colors))
+                    @foreach($all_colors as $v)
+                        <option value="{{ $v }}" @if($selectedColor == $v) selected="selected" @endif>{{ $v }}</option>
+                    @endforeach
+                @endif
+            </select>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label for="productSize" class="onex-form-label">Size: </label>
+            <select name="product_meta_fields[size]" id="productSize" class="form-control onex-select2" data-placeholder="Size">
+                <option value=""></option>
+                @for($i = 1; $i <= 14; $i++)
+                    <option value="{{ $i }}" @if($selectedSize == $i) selected="selected" @endif>{{ $i }}</option>
+                @endfor
+            </select>
+        </div>
+    </div>
+    <div class="col-md-8"></div>
+</div>
 <div class="row">
     <div class="col-md-4">
         <div class="form-group">
-            <label for="productPrice" class="onex-form-label">Product Price (Sale): <em>*</em></label>
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>
-                </div>
-                <input type="number" maxlength="10" min="0" name="price" id="productPrice" class="form-control cal-price" placeholder="Enter Product Price" required="required" value="{{ $product->price }}"/>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="form-group">
-            <label for="productOldPrice" class="onex-form-label">Product Price (MRP): <em>*</em></label>
+            <label for="productOldPrice" class="onex-form-label">Product M.R.P: <em>*</em></label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>
                 </div>
                 <input type="number" maxlength="10" min="0" name="old_price" id="productOldPrice" class="form-control cal-price" placeholder="Enter Product Old Price" required="required" value="{{ $product->old_price }}"/>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="productPrice" class="onex-form-label">Product Sale Price: <em>*</em></label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>
+                </div>
+                <input type="number" maxlength="10" min="0" name="price" id="productPrice" class="form-control cal-price" placeholder="Enter Product Price" required="required" value="{{ $product->price }}"/>
             </div>
         </div>
     </div>
@@ -340,7 +381,7 @@ $(document).ready(function() {
                 digits: 'Invalid brand'
             },
             sku: {
-                required: 'Please enter product sku',
+                required: 'Please enter item no',
                 maxlength: 'Maximum 30 chars accepted'
             },
             price: {

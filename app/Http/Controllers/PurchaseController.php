@@ -83,6 +83,100 @@ class PurchaseController extends Controller
         return view('backend.purchase.add', $dataBag);
     }
 
+    public function addPurchaseProduct(Request $request, $id)
+    {
+        $isPurchase = Purchase::where('hash_id', $id)->first();
+        if (empty($isPurchase)) {
+            return back()
+                ->with('message_type', 'error')
+                ->with('message_title', 'Server Error!')
+                ->with('message_text', 'Something Went Wrong!');
+        }
+
+        $dataBag = [];
+        $dataBag['sidebar_parent'] = 'purchase_management';
+        $dataBag['sidebar_child'] = 'add-purchase';
+
+        $dataBag['batches'] = Batch::where('status', '!=', 3)->orderBy('id', 'desc')->get();
+        $dataBag['vendors'] = User::where('user_category', 2)->where('status', '!=', 3)->orderBy('first_name', 'asc')->get();
+        $dataBag['units'] = Unit::where('status', '!=', 3)->orderBy('id', 'desc')->get();
+        $dataBag['productVariants'] = ProductVariants::select(
+                'id', 
+                'name', 
+                'sku', 
+                'barcode_no', 
+                'unit_id', 
+                'price', 
+                'old_price', 
+                'hsn_code', 
+                'gst_rate'
+            )
+            ->where('status', '!=', 3)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $dataBag['purchase'] = Purchase::findOrFail($isPurchase->id);
+
+        return view('backend.purchase.add-purchase-product', $dataBag);
+    }
+
+    public function savePurchaseProduct(Request $request, $id)
+    {
+
+        $isPurchaseExist = Purchase::findOrFail($id);
+
+        $productId = $request->input('product_id');
+        $batchId = $request->input('batch_id');
+        $vendorId = $request->input('vendor_id');
+        $billNo = !empty($request->input('bill_no')) ? $request->input('bill_no') : null;
+        $receivedDate = date('Y-m-d', strtotime($request->input('received_date')));
+
+        /** purchase entry */
+        $purchaseId = self::doPurchase($request, $isPurchaseExist);
+
+        if (!empty($purchaseId)) {
+            /** purchase product entry */
+            $purchaseProduct = new PurchaseProduct();
+            $purchaseProduct->purchase_id = $purchaseId;
+            $purchaseProduct->batch_id = $request->input('batch_id');
+            $purchaseProduct->vendor_id = $request->input('vendor_id');
+            $purchaseProduct->product_id = $request->input('product_id');
+            $purchaseProduct->product_qty = $request->input('product_qty');
+            $purchaseProduct->unit_id = $request->input('unit_id');
+            $purchaseProduct->purchase_price = $request->input('purchase_price');
+            $purchaseProduct->sale_price = $request->input('sale_price');
+            $purchaseProduct->gst_rate = $request->input('gst_rate');
+            $purchaseProduct->gst_amount = $request->input('gst_amount');
+            $purchaseProduct->total_amount = $request->input('total_amount');
+            if ($purchaseProduct->save()) {
+                
+                /** check purchase batch with product combination */
+                $isBatchProductsExist = BatchProducts::where('batch_id', $batchId)
+                    ->where('product_id', $productId)
+                    ->first();
+
+                /** purchase batch product add or update */
+                $batchEntry = self::batchWiseProduct($request, $isBatchProductsExist);
+
+                /** product variant master table final current stock */
+                if (!empty($batchEntry)) {
+                    ProductVariants::where('id', $batchEntry->product_id)
+                        ->increment('available_stock', $batchEntry->product_qty);
+                }
+
+                return redirect()->back()
+                    ->with('message_type', 'success')
+                    ->with('message_title', 'Done!')
+                    ->with('message_text', 'New purchase entry has been created successfully');
+            }
+        }
+
+        return back()
+            ->with('message_type', 'error')
+            ->with('message_title', 'Server Error!')
+            ->with('message_text', 'Something Went Wrong!');
+    }
+
     public function save(Request $request)
     {
         $productId = $request->input('product_id');
@@ -114,6 +208,7 @@ class PurchaseController extends Controller
             $purchaseProduct->product_qty = $request->input('product_qty');
             $purchaseProduct->unit_id = $request->input('unit_id');
             $purchaseProduct->purchase_price = $request->input('purchase_price');
+            $purchaseProduct->sale_price = $request->input('sale_price');
             $purchaseProduct->gst_rate = $request->input('gst_rate');
             $purchaseProduct->gst_amount = $request->input('gst_amount');
             $purchaseProduct->total_amount = $request->input('total_amount');
@@ -148,14 +243,95 @@ class PurchaseController extends Controller
 
     }
 
+    public function edit(Request $request, $id)
+    {
+        $isPurchase = Purchase::where('hash_id', $id)->first();
+        if (empty($isPurchase)) {
+            return back()
+                ->with('message_type', 'error')
+                ->with('message_title', 'Server Error!')
+                ->with('message_text', 'Something Went Wrong!');
+        }
+        
+        $dataBag = [];
+        $dataBag['sidebar_parent'] = 'purchase_management';
+        $dataBag['sidebar_child'] = 'add-purchase';
+
+        $dataBag['batches'] = Batch::where('status', '!=', 3)->orderBy('id', 'desc')->get();
+        $dataBag['vendors'] = User::where('user_category', 2)->where('status', '!=', 3)->orderBy('first_name', 'asc')->get();
+        $dataBag['units'] = Unit::where('status', '!=', 3)->orderBy('id', 'desc')->get();
+        $dataBag['productVariants'] = ProductVariants::select(
+                'id', 
+                'name', 
+                'sku', 
+                'barcode_no', 
+                'unit_id', 
+                'price', 
+                'old_price', 
+                'hsn_code', 
+                'gst_rate'
+            )
+            ->where('status', '!=', 3)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $dataBag['purchase'] = Purchase::with([
+                'purchaseProducts' => function ($purchaseProductQry) {
+                    $purchaseProductQry->with([
+                        'productVariantInfo',
+                        'unitInfo'
+                    ])
+                    ->where('status', '!=', 3);
+                },
+                'batchInfo',
+                'vendorInfo'
+            ])
+            ->findOrFail($isPurchase->id);
+
+        return view('backend.purchase.edit', $dataBag);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $batchId = $request->input('disabled_batch_id_value') ?? null;
+        $vendorId = $request->input('disabled_vendor_id_value') ?? null;
+        $billNo = !empty($request->input('bill_no')) ? $request->input('bill_no') : null;
+        $receivedDate = date('Y-m-d', strtotime($request->input('disabled_received_date_value')));
+
+        $receivedDateStart = $receivedDate . '00:00:00';
+        $receivedDateEnd = $receivedDate . '23:59:59';
+
+        /** check already purchase exist or not with below condition */
+        $isPurchaseExist = Purchase::where('batch_id', $batchId)
+            ->where('bill_no', $billNo)
+            ->where('vendor_id', $vendorId)
+            ->whereDate('received_date', $receivedDate)
+            ->where('id', '!=', $id)
+            ->first();
+
+        if (!empty($isPurchaseExist)) {
+            return back()
+                ->with('message_type', 'error')
+                ->with('message_title', 'Purchase already exist')
+                ->with('message_text', 'This purchase all ready exist with this combination');
+        }
+
+        $purchase = Purchase::findOrFail($id);
+        $purchase->bill_no = $billNo;
+        $purchase->note = $request->input('note') ?? null;
+        $purchase->save();
+
+        return back()
+            ->with('message_type', 'success')
+            ->with('message_title', 'Success!')
+            ->with('message_text', 'Purchase information has been updated successfully');
+    }
+
     public static function doPurchase($requestObj, $purchase)
     {
         if (!empty($purchase)) {
             $purchase->bill_amount = $purchase->bill_amount + $requestObj->input('total_amount');
-            $purchase->due_amount = ($purchase->bill_amount > $purchase->due_amount) ? ($purchase->bill_amount - $purchase->due_amount) : 0;
-            if ($purchase->due_amount > 0) {
-                $purchase->payment_status = 0;
-            }
+            $purchase->due_amount = $purchase->due_amount + $requestObj->input('total_amount');
             $purchase->save();
             return $purchase->id;
         }
@@ -166,7 +342,7 @@ class PurchaseController extends Controller
         $purchase->vendor_id = $requestObj->input('vendor_id');
         $purchase->bill_amount = $requestObj->input('total_amount');
         $purchase->due_amount = $requestObj->input('total_amount');
-        $purchase->bill_no = $requestObj->input('bill_no');
+        $purchase->bill_no = !empty($requestObj->input('bill_no')) ? $requestObj->input('bill_no') : null;
         $purchase->received_date = date('Y-m-d', strtotime($requestObj->input('received_date')));
         $purchase->save();
         return $purchase->id;

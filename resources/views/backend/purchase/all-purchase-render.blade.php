@@ -50,13 +50,14 @@
                             @endif
                         @endif                        
                     </td>
-                    <td>{{ count($value->purchaseProducts) }}</td>
+                    <td><strong>{{ count($value->purchaseProducts) }}</strong></td>
                     <td>{{ date('d-m-Y', strtotime($value->received_date)) }}</td>
                     <td>{{ date('d-m-Y', strtotime($value->created_at)) }}</td>
                     <td>{{ !empty($value->updated_at) ? date('d-m-Y', strtotime($value->updated_at)) : date('d-m-Y', strtotime($value->created_at)) }}</td>
                     <td>
-                        {{-- <a href="{{ route('purchase.edit-batch', array('id' => $value->hash_id)) }}" class="btn edit-batch-btn"><i class="far fa-edit text-success"></i></a> --}}
-                        <a href="{{ route('purchase.delete-purchase', array('id' => $value->hash_id)) }}" class="btn remove-purchase-btn"><i class="far fa-trash-alt text-danger"></i></a>
+                        <a href="{{ route('purchase.add-purchase-product', array('id' => $value->hash_id)) }}" class="entry-purchase-product-btn"><i class="fas fa-plus text-primary"></i></a>
+                        &nbsp;&nbsp;<a href="{{ route('purchase.edit-purchase', array('id' => $value->hash_id)) }}" class="edit-purchase-btn"><i class="far fa-edit text-success"></i></a>
+                        &nbsp;&nbsp;<a href="{{ route('purchase.delete-purchase', array('id' => $value->hash_id)) }}" class="remove-purchase-btn"><i class="far fa-trash-alt text-danger"></i></a>
                     </td>
                 </tr>
                 @php $sl++; @endphp

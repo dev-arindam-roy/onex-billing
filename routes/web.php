@@ -244,6 +244,11 @@ Route::prefix('auth')->group(function () {
                         /* Each Product Purchase */
                         Route::get('/add', 'add')->name('add-purchase');
                         Route::post('/add', 'save')->name('save-purchase');
+                        Route::get('/edit/{id}', 'edit')->name('edit-purchase');
+                        Route::post('/edit/{id}', 'update')->name('update-purchase');
+
+                        Route::get('/entry/{id}', 'addPurchaseProduct')->name('add-purchase-product');
+                        Route::post('/entry/{id}', 'savePurchaseProduct')->name('save-purchase-product');
                         
                         /* Batches */
                         Route::get('/batches', 'batchIndex')->name('all-batches');

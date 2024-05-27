@@ -20,7 +20,7 @@
 <form name="search_frm" id="searchFrm" action="" method="GET">
     <div class="row mb-2">
         <div class="col-md-3">
-            <input type="text" name="variant_name" id="searchVariantName" class="form-control" placeholder="Product Name" value="{{ (request()->has('variant_name')) ? request()->get('variant_name') : '' }}"/>
+            <input type="text" name="search_variant" id="searchVariant" class="form-control" placeholder="Name/Item No" value="{{ (request()->has('search_variant')) ? request()->get('search_variant') : '' }}"/>
         </div>
         <div class="col-md-2">
             <button type="submit" class="btn btn-success">Search</button>

@@ -35,7 +35,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="emailId" class="onex-form-label">Email Id: <em>*</em></label>
-                        <input type="email" name="email_id" id="emailId" class="form-control" placeholder="Enter Email Id" required="required" autocomplete="new-email"/>
+                        <input type="email" name="email_id" id="emailId" class="form-control" placeholder="Enter Email Id" autocomplete="new-email"/>
                     </div>
                 </div>
             </div>

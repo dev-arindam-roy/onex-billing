@@ -19,16 +19,18 @@
 <input type="hidden" id="downloadFileName" value="{{ $data->invoice_no }}_{{ date('m-d-Y_h:i:s') }}" />
 <div class="row mt-2" id="printContentArea">
     <div class="col-md-12">
-        <table class="print-table" style="width: 100%;">
+        <table class="print-table" style="width: 100%; font-family: Arial, Helvetica, sans-serif;">
             <thead>
                 <tr>
                     <th style="width: 120px; vertical-align: middle; text-align: left;">
                         <img src="{{ asset('public/images/client_logo_bill.jpeg') }}" style="border-radius: 5px;"/>
                     </th>
-                    <th style="vertical-align: middle; text-align: left;">
-                        <p><label style="font-size: 14px; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; word-spacing: 6px;">{{ $company_information->company_name }}</label></p>
-                        <p style="line-height: 0px; margin-top: -8px;"><span style="font-size: 12px; font-weight: normal;">{{ $company_information->full_address }}</span></p>
-                        <p style="line-height: 0px;"><span style="font-size: 12px; font-weight: 600;">CIN:</span> <span style="font-size: 12px; font-weight: normal;">{{ $company_information->cin_no }}</span></p>
+                    <th style="width: 400px; vertical-align: middle; text-align: left; word-wrap: break-word;">
+                        <p style="line-height: 0px;"><label style="font-size: 18px; color:#000099; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; word-spacing: 6px;">{{ $company_information->company_name }}<sup>&reg;</sup></label></p>
+                        <p style="margin-top: -10px; line-height: 16px;"><span style="font-size: 12px; font-weight: normal;">{{ $company_information->full_address }}</span></p>
+                        @if (!empty($company_information->cin_no))
+                            <p style="line-height: 0px;"><span style="font-size: 12px; font-weight: 600;">CIN:</span> <span style="font-size: 12px; font-weight: normal;">{{ $company_information->cin_no }}</span></p>
+                        @endif
                         <p style="line-height: 0px;"><span style="font-size: 12px; font-weight: 600;">Website:</span> <span style="font-size: 12px; font-weight: normal;">{{ $company_information->website_url }}</span></p>
                     </th>
                     <th style="vertical-align: middle; text-align: right;">
@@ -87,13 +89,25 @@
                 @endphp
                 @foreach($data->saleProducts as $v)
                     @if(!empty($v->productInfo) && !empty($v->unitInfo))
+                        @php
+                            $color = $size = "";
+                            if (!empty($v->productInfo->metaFields) && count($v->productInfo->metaFields)) {
+                                foreach ($v->productInfo->metaFields as $v) {
+                                    $color = (!empty($v->field_key) && $v->field_key == 'color') ? $v->field_value : '';
+                                    $size = (!empty($v->field_key) && $v->field_key == 'size') ? $v->field_value : ''; 
+                                }
+                            }
+                        @endphp
                         <tr>
                             <td style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left; font-size: 12px;">{{ $sl }}.</td>
-                            <td style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left; font-size: 12px;">
-                                <p style="line-height: 0px;"><span style="font-size: 12px; font-weight: 600;">{{ $v->productInfo->name }}</span></p>
-                                <p style="line-height: 2px;"><span style="font-size: 12px; font-weight: normal;">{{ $v->productInfo->barcode_no }}</span></p>
+                            <td style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left; font-size: 12px; word-wrap: break-word;">
+                                <p style="line-height: 5px;"><span style="font-size: 12px; font-weight: 600;">{{ $v->productInfo->name }}</span></p>
+                                <p style="line-height: 5px;"><span style="font-size: 12px; font-weight: normal;"><span style="font-weight: 600;">Item No:</span> {{ $v->productInfo->sku }}</span></p>
+                                @if (!empty($size) || !empty($color))
+                                    <p style="line-height: 3px;"><span style="font-size: 12px; font-weight: normal;"><span style="font-weight: 600;">Size/Color:</span> {{ $size }}/{{ $color }}</span></p>
+                                @endif
                                 @if(!empty($v->productInfo->short_description))
-                                    <p style="line-height: 1px;"><span style="font-size: 12px; font-style: italic; font-weight: normal;">{{ $v->productInfo->short_description }}</span></p>
+                                    <p style="line-height: 2px;"><span style="font-size: 12px; font-style: italic; font-weight: normal;">{{ $v->productInfo->short_description }}</span></p>
                                 @endif
                                 @if(!empty($v->productInfo->productBrand->name))
                                     <p style="line-height: 1px;"><span style="font-size: 12px; font-weight: 600;">{{ $v->productInfo->productBrand->name }}</span></p>

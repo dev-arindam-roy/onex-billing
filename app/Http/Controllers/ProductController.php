@@ -12,6 +12,7 @@ use App\Models\ProductCategories;
 use App\Models\ProductSubCategories;
 use App\Models\ProductVariants;
 use App\Models\ProductBundleFree;
+use App\Models\ProductMetaFields;
 use Session;
 use Helper;
 use Image;
@@ -21,6 +22,51 @@ use DB;
 
 class ProductController extends Controller
 {
+    public static $productColors = array(
+        "Black",
+        "White",
+        "Red",
+        "Blue",
+        "Green",
+        "Yellow",
+        "Brown",
+        "Gray",
+        "Beige",
+        "Purple",
+        "Orange",
+        "Pink",
+        "Charcoal Gray",
+        "Navy Blue",
+        "Sky Blue",
+        "Emerald Green",
+        "Olive Green",
+        "Maroon",
+        "Burgundy",
+        "Turquoise",
+        "Teal",
+        "Lime Green",
+        "Mustard Yellow",
+        "Tan",
+        "Camel",
+        "Ivory",
+        "Cream",
+        "Lavender",
+        "Magenta",
+        "Coral",
+        "Peach",
+        "Gold",
+        "Silver",
+        "Bronze",
+        "Copper",
+        "Rose Gold",
+        "Cobalt Blue",
+        "Mint Green",
+        "Forest Green",
+        "Crimson",
+        "Rust",
+        "Blush Pink"
+    );
+
     public function index(Request $request)
     {
         $dataBag = [];
@@ -416,10 +462,11 @@ class ProductController extends Controller
         $dataBag['sidebar_child'] = 'productvariants';
         $pagination = !empty($request->get('pagination')) ? $request->get('pagination') : 25; 
         
-        $searchProductName = ($request->has('variant_name') && !empty($request->get('variant_name'))) ? $request->get('variant_name') : null; 
+        $searchVariant = ($request->has('search_variant') && !empty($request->get('search_variant'))) ? $request->get('search_variant') : null; 
         $dataBag['data'] = ProductVariants::with(['baseProduct', 'productUnit', 'productBrand'])
-            ->when(!empty($searchProductName), function ($query) use ($searchProductName) {
-                return $query->where('name', 'like', '%' . $searchProductName . '%');
+            ->when(!empty($searchVariant), function ($query) use ($searchVariant) {
+                return $query->where('name', 'like', '%' . $searchVariant . '%')
+                    ->orWhere('sku', $searchVariant);
             })
             ->where('status', '!=', 3)
             ->orderBy('id', 'desc')
@@ -440,6 +487,7 @@ class ProductController extends Controller
         $dataBag['all_products'] = Products::where('status', '!=', 3)->orderBy('name', 'asc')->get();
         $dataBag['all_units'] = Unit::where('status', '!=', 3)->orderBy('name', 'asc')->get();
         $dataBag['all_brands'] = Brand::where('status', '!=', 3)->orderBy('name', 'asc')->get();
+        $dataBag['all_colors'] = self::$productColors;
         return view('backend.product.add-variant', $dataBag);
     }
 
@@ -490,6 +538,9 @@ class ProductController extends Controller
             $obj->image = $newName;
         }
         if ($obj->save()) {
+            if ($request->has('product_meta_fields') && !empty($request->input('product_meta_fields'))) {
+                self::addUpdateVariantMetaFields($obj->id, $request->input('product_meta_fields'));
+            }
             return redirect()->back()
                 ->with('message_type', 'success')
                 ->with('message_title', 'Done!')
@@ -517,11 +568,12 @@ class ProductController extends Controller
         $dataBag = [];
         $dataBag['sidebar_parent'] = 'product_management';
         $dataBag['sidebar_child'] = 'productvariants';
-        $product = ProductVariants::findOrFail($id);
+        $product = ProductVariants::with(['metaFields'])->findOrFail($id);
         $dataBag['product'] = $product;
         $dataBag['all_products'] = Products::where('status', '!=', 3)->orderBy('name', 'asc')->get();
         $dataBag['all_units'] = Unit::where('status', '!=', 3)->orderBy('name', 'asc')->get();
         $dataBag['all_brands'] = Brand::where('status', '!=', 3)->orderBy('name', 'asc')->get();
+        $dataBag['all_colors'] = self::$productColors;
         return view('backend.product.edit-variant', $dataBag);
     }
 
@@ -571,6 +623,9 @@ class ProductController extends Controller
             $obj->image = $newName;
         }
         if ($obj->save()) {
+            if ($request->has('product_meta_fields') && !empty($request->input('product_meta_fields'))) {
+                self::addUpdateVariantMetaFields($obj->id, $request->input('product_meta_fields'));
+            }
             return redirect()->back()
                 ->with('message_type', 'success')
                 ->with('message_title', 'Done!')
@@ -580,6 +635,34 @@ class ProductController extends Controller
             ->with('message_type', 'error')
             ->with('message_title', 'Server Error!')
             ->with('message_text', 'Something Went Wrong!');
+    }
+
+    public static function addUpdateVariantMetaFields($variantId, $metaFields = [])
+    {
+        if (empty($variantId) || !is_array($metaFields) || empty($metaFields)) {
+            return false;
+        }
+        foreach ($metaFields as $k => $v) {
+            if (!empty($k) && !empty($v)) {
+                $isExist = ProductMetaFields::where('variant_product_id', $variantId)
+                    ->where('field_key', $k)
+                    ->exists();
+
+                if ($isExist) {
+                    ProductMetaFields::where('variant_product_id', $variantId)
+                        ->where('field_key', $k)
+                        ->update(['field_name' => $k, 'field_value' => $v]);
+                } else {
+                    $productMetaFields = new ProductMetaFields();
+                    $productMetaFields->variant_product_id = $variantId;
+                    $productMetaFields->field_key = $k;
+                    $productMetaFields->field_name = $k;
+                    $productMetaFields->field_value = $v;
+                    $productMetaFields->save();  
+                }
+            }
+        }
+        return true;
     }
 
     /** Bundle */

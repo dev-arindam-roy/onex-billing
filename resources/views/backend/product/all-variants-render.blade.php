@@ -9,8 +9,8 @@
                 <th class="onex-md">Brand</th>
                 <th class="onex-sm">Unit</th>
                 <th class="onex-sm">Price</th>
-                <th class="onex-xxs">Bundle</th>
-                <th class="onex-xxs">Free</th>
+                <!--th class="onex-xxs">Bundle</th-->
+                <!--th class="onex-xxs">Free</th-->
                 <th class="onex-md">Category</th>
                 <th class="onex-md">Sub-Category</th>
                 <th class="onex-sm">Status</th>
@@ -33,12 +33,12 @@
                             <img src="{{ asset('public/images/blank_image.png') }}" class="dt-table-image"/>
                         @endif
                     </td>
-                    <td>{{ $value->name }}<br/><strong>SKU:</strong> {{ $value->sku }}</td>
+                    <td>{{ $value->name }}<br/><strong>Item No:</strong> {{ $value->sku }}</td>
                     <td>@if(!empty($value->productBrand) && !empty($value->productBrand->name)){{ $value->productBrand->name }}@endif</td>
                     <td>@if(!empty($value->productUnit) && !empty($value->productUnit->name)){{ $value->productUnit->name }}@endif</td>
                     <td>{{ $value->price }}</td>
-                    <td>{!! ($value->is_bundle_product == 1) ? '<span class="text-success">YES</span>' : '<span class="text-danger">NO</span>' !!}</td>
-                    <td>{!! ($value->have_free_product == 1) ? '<span class="text-success">YES</span>' : '<span class="text-danger">NO</span>' !!}</td>
+                    {{-- <td>{!! ($value->is_bundle_product == 1) ? '<span class="text-success">YES</span>' : '<span class="text-danger">NO</span>' !!}</td> --}}
+                    {{-- <td>{!! ($value->have_free_product == 1) ? '<span class="text-success">YES</span>' : '<span class="text-danger">NO</span>' !!}</td> --}}
                     <td>@if(!empty($value->baseProduct) && !empty($value->baseProduct->productCategory) && !empty($value->baseProduct->productCategory->name)){{ $value->baseProduct->productCategory->name }}@endif</td>
                     <td>@if(!empty($value->baseProduct) && !empty($value->baseProduct->productSubCategory) && !empty($value->baseProduct->productSubCategory->name)){{ $value->baseProduct->productSubCategory->name }}@endif</td>
                     <td>{!! ($value->status == 1) ? '<span class="text-success">Active</span>' : '<span class="text-danger">Inactive</span>' !!}</td>
@@ -67,7 +67,7 @@
             @endforeach
         @else
             <tr>
-                <td colspan="15">No product variants found. Please create product variant</td>
+                <td colspan="13">No product variants found. Please create product variant</td>
             </tr>
         @endif
         </tbody>

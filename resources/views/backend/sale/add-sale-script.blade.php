@@ -138,7 +138,6 @@ $(document).ready(function() {
                 maxlength: 20
             },
             email_id: {
-                required: true,
                 email: true,
                 maxlength: 60
             },
@@ -159,7 +158,6 @@ $(document).ready(function() {
                 maxlength: 'Maximum 20 chars accepted'
             },
             email_id: {
-                required: 'Please enter email',
                 email: 'Please enter valid email',
                 maxlength: 'Maximum 60 chars accepted'
             },

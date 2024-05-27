@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ProductBundleFree;
+use App\Models\ProductMetaFields;
 use App\Models\Products;
 use App\Models\Brand;
 use App\Models\Unit;
@@ -38,5 +39,9 @@ class ProductVariants extends Model
 
     public function freeProducts() {
         return $this->hasMany(ProductBundleFree::class, 'variant_id', 'id')->where('type', 2);
+    }
+
+    public function metaFields() {
+        return $this->hasMany(ProductMetaFields::class, 'variant_product_id', 'id');
     }
 }

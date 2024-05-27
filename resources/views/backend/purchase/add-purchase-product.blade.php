@@ -20,57 +20,54 @@
 @endsection
 
 @section('content_body')
-<form name="frm" id="frmx" action="{{ route('purchase.save-purchase') }}" method="POST" enctype="multipart/form-data">
+<form name="frm" id="frmx" action="{{ route('purchase.save-purchase-product', array('id' => $purchase->id)) }}" method="POST" enctype="multipart/form-data">
 @csrf
+<h4><strong>Purchase Info</strong></h4>
+@php
+    $batchInfo = "";
+    if(!empty($batches) && count($batches)) {
+        foreach($batches as $k => $v) {
+            if(!empty($purchase->batch_id) && $purchase->batch_id == $v->id) {
+                $batchInfo = $v->batch_no;
+                if (!empty($v->name)) {
+                    $batchInfo .= "(" . $v->name . ")";
+                }
+            }
+        }
+    }
+    $vendorName = "";
+    if(!empty($vendors) && count($vendors)) {
+        foreach($vendors as $k => $v) {
+            if(!empty($purchase->vendor_id) && $purchase->vendor_id == $v->id) {
+                $vendorName = $v->first_name . ' ' . $v->last_name;
+            }
+        }
+    }
+@endphp
 <div class="row">
-    <div class="col-md-3">
-        <div class="form-group">
-            <label for="billNo" class="onex-form-label">Purchase Invoice / Bill No:</label>
-            <input type="text" name="bill_no" id="billNo" class="form-control" placeholder="Invoice / Bill" value="{{ old('bill_no') }}" />
-        </div>
+    <div class="col-md-12">
+        <table class="table table-bordered table-striped table-hover table-sm">
+            <tr>
+                <th>Invoice / Bill No</th>
+                <th>Purchase Date</th>
+                <th>Batch No</th>
+                <th>Vendor Name</th>
+            </tr>
+            <tr>
+                <th>{{ $purchase->bill_no }}</th>
+                <th>{{ !empty($purchase->received_date) ? date('Y/m/d', strtotime($purchase->received_date)) : '' }}</th>
+                <th>{{ $batchInfo }}</th>
+                <th>{{ $vendorName }}</th>
+            </tr>
+        </table>
     </div>
-    <div class="col-md-3">
-        <div class="form-group" id="bsDatePickerContainer">
-            <label for="receivedDate" class="onex-form-label">Received Date: <em>*</em></label>
-            <input type="text" name="received_date" id="receivedDate" class="form-control onex-datepicker" readonly="readonly" placeholder="Date" required="required" />
-            <input type="hidden" id="todayDateHidden" value="{{ !empty(old('received_date')) ? old('received_date') : date('Y/m/d') }}"/>
-        </div>
-    </div>
+    <input type="hidden" name="received_date" value="{{ !empty($purchase->received_date) ? date('Y/m/d', strtotime($purchase->received_date)) : date('Y/m/d') }}"/>
+    <input type="hidden" name="batch_id" value="{{ $purchase->batch_id }}"/>
+    <input type="hidden" name="vendor_id" value="{{ $purchase->vendor_id }}"/>
+    <input type="hidden" name="bill_no" value="{{ $purchase->bill_no }}"/>
 </div>
-<div class="row">
-    <div class="col-md-6">
-        <div class="form-group">
-            <label for="batchId" class="onex-form-label">Batch No: <em>*</em></label>
-            <select name="batch_id" class="form-control onex-select2" id="batchId" required="required" data-placeholder="Select a batch">
-                <option value=""></option>
-                @if(!empty($batches) && count($batches))
-                    @foreach($batches as $k => $v)
-                        <option value="{{ $v->id }}" @if(!empty(old('batch_id')) && old('batch_id') == $v->id) selected="selected" @endif>{{ $v->batch_no }} @if(!empty($v->name)) ({{ $v->name }}) @endif</option>
-                    @endforeach
-                @endif
-            </select>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="form-group">
-            <label for="vendorId" class="onex-form-label">Vendor/Supplier: <em>*</em></label>
-            <select name="vendor_id" class="form-control onex-select2" id="vendorId" required="required" data-placeholder="Select a vendor">
-                <option value=""></option>
-                @if(!empty($vendors) && count($vendors))
-                    @foreach($vendors as $k => $v)
-                        <option value="{{ $v->id }}" @if(!empty(old('vendor_id')) && old('vendor_id') == $v->id) selected="selected" @endif>{{ $v->first_name . ' ' . $v->last_name }}</option>
-                    @endforeach
-                @endif
-            </select>
-        </div>
-    </div>
-    <div class="col-md-4">
-        
-    </div>
-    <div class="col-md-2">
-        
-    </div>
-</div>
+<h4><strong>Add Products</strong></h4>
+<hr/>
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">

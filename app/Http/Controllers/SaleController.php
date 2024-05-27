@@ -447,7 +447,7 @@ class SaleController extends Controller
                 $saleProductsQry->with([
                     'unitInfo',
                     'productInfo' => function ($productInfoQry) {
-                        $productInfoQry->with(['productBrand']);
+                        $productInfoQry->with(['productBrand', 'metaFields']);
                     } 
                 ]);
             }
