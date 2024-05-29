@@ -10,6 +10,11 @@
 <script src="{{ asset('public') }}/master-assets/script-fix.js"></script>
 <script>
 $(document).ready(function() {
+    setTimeout(() => {
+        $('.os-viewport').animate({
+            scrollTop: $('.sidebar .nav-link.active').offset().top
+        }, 2000);
+    }, 1000);
     $('body').on('click', '.table-image-remove', function(e) {
         e.preventDefault();
         let _this = $(this);
