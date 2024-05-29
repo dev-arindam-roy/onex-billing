@@ -360,7 +360,10 @@ class ProductController extends Controller
     public function saveSubCategory(Request $request)
     {
         $name = $request->input('name');
-        $checkName = ProductSubCategories::where('name', $name)->where('status', '!=', 3)->exists();
+        $checkName = ProductSubCategories::where('name', $name)
+            ->where('category_id', $request->input('category_id'))
+            ->where('status', '!=', 3)
+            ->exists();
 
         if ($checkName) {
             return back()
@@ -411,7 +414,11 @@ class ProductController extends Controller
     public function updateSubCategory(Request $request, $id)
     {
         $name = $request->input('name');
-        $checkName = ProductSubCategories::where('name', $name)->where('id', '!=', $id)->where('status', '!=', 3)->exists();
+        $checkName = ProductSubCategories::where('name', $name)
+            ->where('category_id', $request->input('category_id'))
+            ->where('id', '!=', $id)
+            ->where('status', '!=', 3)
+            ->exists();
 
         if ($checkName) {
             return back()

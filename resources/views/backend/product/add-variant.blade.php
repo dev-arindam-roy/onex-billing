@@ -121,7 +121,7 @@
 <div class="row">
     <div class="col-md-4">
         <div class="form-group">
-            <label for="productOldPrice" class="onex-form-label">Product M.R.P: <em>*</em></label>
+            <label for="productOldPrice" class="onex-form-label">Product M.R.P: <em>*</em></label> <span>(<small><i>Maximum selling price</i></small>)</span>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>
@@ -132,7 +132,7 @@
     </div>
     <div class="col-md-4">
         <div class="form-group">
-            <label for="productPrice" class="onex-form-label">Product Sale Price: <em>*</em></label>
+            <label for="productPrice" class="onex-form-label">Product Sale Price: <em>*</em></label> <span>(<small><i>Sale price should be less than MRP</i></small>)</span>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>

@@ -43,30 +43,30 @@
                             <p>Brands</p>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a href="{{ route('product.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'products') active @endif">
                             <i class="far fa-circle nav-icon"></i>
                             <p>Base Products</p>
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="nav-item">
                         <a href="{{ route('product.variant.allVariants') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'productvariants') active @endif">
                             <i class="far fa-circle nav-icon"></i>
-                            <p>Product Variants</p>
+                            <p>Products</p>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a href="{{ route('product.category.allCategories') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'categories') active @endif">
                             <i class="far fa-circle nav-icon"></i>
                             <p>Categories</p>
                         </a>
-                    </li>
-                    <li class="nav-item">
+                    </li> --}}
+                    {{-- <li class="nav-item">
                         <a href="{{ route('product.subcategory.allSubCategories') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'subcategories') active @endif">
                             <i class="far fa-circle nav-icon"></i>
                             <p>Subcategories</p>
                         </a>
-                    </li>
+                    </li> --}}
                 </ul>
             </li>
             @endif
@@ -244,14 +244,14 @@
                 </ul>
             </li>
 
-            <li class="nav-header">CRM REPORTS</li>
+            {{-- <li class="nav-header">CRM REPORTS</li>
             <li class="nav-item @if(!empty($sidebar_parent) && $sidebar_parent == 'customer_management') menu-open @endif">
                 <a href="#" class="nav-link @if(!empty($sidebar_parent) && $sidebar_parent == 'customer_management') active @endif">
                     <i class="nav-icon fas fa-passport"></i>
                     <p>Report Management<i class="right fas fa-angle-left"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
-                    {{--<li class="nav-item">
+                    <li class="nav-item">
                         <a href="{{ route('customer.index') }}" class="nav-link @if(!empty($sidebar_child) && $sidebar_child == 'all-customers') active @endif">
                             <i class="far fa-circle nav-icon"></i>
                             <p>All Customers</p>
@@ -262,9 +262,9 @@
                             <i class="far fa-circle nav-icon"></i>
                             <p>Add Customer</p>
                         </a>
-                    </li>--}}
+                    </li>
                 </ul>
-            </li>
+            </li> --}}
             
             @if(Helper::canAccess(array('super-admin')))
             <li class="nav-header">SETTINGS</li>

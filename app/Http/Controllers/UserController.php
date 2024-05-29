@@ -24,6 +24,7 @@ class UserController extends Controller
         $authId = Auth::user()->id;
         $pagination = !empty($request->get('pagination')) ? $request->get('pagination') : 25;
         $dataBag['data'] = User::with(['userRoles'])
+            ->where('id', '!=', 1)
             ->where('id', '!=', $authId)
             ->where('status', '!=', 3)
             ->where('user_category', 1)

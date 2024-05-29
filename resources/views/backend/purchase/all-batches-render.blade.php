@@ -23,8 +23,10 @@
                     <td>{{ date('d-m-Y', strtotime($value->created_at)) }}</td>
                     <td>{{ !empty($value->updated_at) ? date('d-m-Y', strtotime($value->updated_at)) : date('d-m-Y', strtotime($value->created_at)) }}</td>
                     <td>
-                        <a href="{{ route('purchase.edit-batch', array('id' => $value->id)) }}" class="btn edit-batch-btn"><i class="far fa-edit text-success"></i></a>
-                        <a href="{{ route('purchase.delete-batch', array('id' => $value->id)) }}" class="btn remove-batch-btn"><i class="far fa-trash-alt text-danger"></i></a>
+                        @if ($value->id != 1)
+                            <a href="{{ route('purchase.edit-batch', array('id' => $value->id)) }}" class="edit-batch-btn"><i class="far fa-edit text-success"></i></a>
+                            <a href="{{ route('purchase.delete-batch', array('id' => $value->id)) }}" class="mx-2 remove-batch-btn"><i class="far fa-trash-alt text-danger"></i></a>
+                        @endif
                     </td>
                 </tr>
                 @php $sl++; @endphp

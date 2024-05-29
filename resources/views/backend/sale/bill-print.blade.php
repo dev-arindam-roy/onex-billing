@@ -92,9 +92,13 @@
                         @php
                             $color = $size = "";
                             if (!empty($v->productInfo->metaFields) && count($v->productInfo->metaFields)) {
-                                foreach ($v->productInfo->metaFields as $v) {
-                                    $color = (!empty($v->field_key) && $v->field_key == 'color') ? $v->field_value : '';
-                                    $size = (!empty($v->field_key) && $v->field_key == 'size') ? $v->field_value : ''; 
+                                foreach ($v->productInfo->metaFields as $meta) {
+                                    if (!empty($meta->field_key) && $meta->field_key == 'color') {
+                                        $color = $meta->field_value;
+                                    }
+                                    if (!empty($meta->field_key) && $meta->field_key == 'size') {
+                                        $size = $meta->field_value;
+                                    }
                                 }
                             }
                         @endphp
@@ -104,7 +108,7 @@
                                 <p style="line-height: 5px;"><span style="font-size: 12px; font-weight: 600;">{{ $v->productInfo->name }}</span></p>
                                 <p style="line-height: 5px;"><span style="font-size: 12px; font-weight: normal;"><span style="font-weight: 600;">Item No:</span> {{ $v->productInfo->sku }}</span></p>
                                 @if (!empty($size) || !empty($color))
-                                    <p style="line-height: 3px;"><span style="font-size: 12px; font-weight: normal;"><span style="font-weight: 600;">Size/Color:</span> {{ $size }}/{{ $color }}</span></p>
+                                    <p style="line-height: 3px;"><span style="font-size: 12px; font-weight: normal;"><span style="font-weight: 600;">Size/Color:</span> {{ $size }} / {{ $color }}</span></p>
                                 @endif
                                 @if(!empty($v->productInfo->short_description))
                                     <p style="line-height: 2px;"><span style="font-size: 12px; font-style: italic; font-weight: normal;">{{ $v->productInfo->short_description }}</span></p>
