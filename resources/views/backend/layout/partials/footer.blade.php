@@ -13,7 +13,7 @@ $(document).ready(function() {
     setTimeout(() => {
         //$('.os-viewport').scrollTop($('.sidebar .nav-link.active')[0].offsetTop);
         $('.os-viewport').animate({
-            scrollTop: $('.sidebar .nav-link.active').offset().top
+            scrollTop: $('.sidebar .nav-link.active').offset().top - 60
         }, 2000);
     }, 1000);
     $('body').on('click', '.table-image-remove', function(e) {
