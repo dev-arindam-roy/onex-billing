@@ -11,6 +11,7 @@
 <script>
 $(document).ready(function() {
     setTimeout(() => {
+        //$('.os-viewport').scrollTop($('.sidebar .nav-link.active')[0].offsetTop);
         $('.os-viewport').animate({
             scrollTop: $('.sidebar .nav-link.active').offset().top
         }, 2000);
