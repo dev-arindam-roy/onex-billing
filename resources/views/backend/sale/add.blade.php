@@ -62,7 +62,7 @@
                             data-hsn-code="{{ $v->hsn_code }}"
                             data-gst-rate="{{ $v->gst_rate }}"
                             data-price="{{ $v->price }}"
-                            data-unit-id="{{ $v->unit_id }}">{{ $v->name }} - (size:{{ $v->size }}) (color:{{ $v->color }}) - (stock:{{ str_replace('.00', '', $v->available_stock) }})</option>
+                            data-unit-id="{{ $v->unit_id }}">{{ $v->name }} - [{{ $v->sku }}] (size:{{ $v->size }}) (color:{{ $v->color }}) - (stock:{{ str_replace('.00', '', $v->available_stock) }})</option>
                     @endforeach
                 @endif
             </select>

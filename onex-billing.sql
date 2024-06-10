@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 29, 2024 at 07:57 PM
+-- Generation Time: Jun 10, 2024 at 05:35 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.5
 
@@ -42,7 +42,7 @@ CREATE TABLE `batches` (
 --
 
 INSERT INTO `batches` (`id`, `batch_no`, `name`, `description`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'BC000000-000000', 'Stock-Adjust', NULL, 1, '2024-05-29 23:18:14', NULL);
+(1, 'BC000000-000000', 'Stock-Adjust', NULL, 1, '2024-06-10 20:51:36', NULL);
 
 -- --------------------------------------------------------
 
@@ -83,7 +83,7 @@ CREATE TABLE `brands` (
 --
 
 INSERT INTO `brands` (`id`, `name`, `description`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Difo', NULL, 1, '2024-05-29 23:18:11', NULL, NULL);
+(1, 'Difo', NULL, 1, '2024-06-10 20:51:34', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -137,13 +137,6 @@ CREATE TABLE `company_information` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `company_information`
---
-
-INSERT INTO `company_information` (`id`, `company_name`, `company_type`, `brand_name`, `gst_no`, `vat_no`, `cin_no`, `tan_no`, `pan_no`, `contact_number`, `contact_email`, `whatsapp_number`, `website_url`, `full_address`, `state`, `city`, `pincode`, `land_mark`, `country`, `created_at`, `updated_at`) VALUES
-(1, 'DIFO', 1, 'DIFO', 'XXX000XXX000XXXX', NULL, NULL, NULL, NULL, '1231231234', 'care@difo.com', '1231231234', 'https://www.difo.com', 'Soudamini Apartment, Ground Floor, Nandankanan, 2 No. Chandigarh Main Road, Post : Madhyamgram Bazar, Kolkata : 700130, West Bengal.', 'West Bengal', 'Madhyamgram', '700130', NULL, 'IND', '2024-05-29 17:56:42', '2024-05-29 17:56:42');
 
 -- --------------------------------------------------------
 
@@ -209,8 +202,8 @@ CREATE TABLE `product_category` (
 --
 
 INSERT INTO `product_category` (`id`, `name`, `description`, `status`, `menu_visibility`, `primary_visibility`, `display_order`, `created_at`, `updated_at`, `deleted_at`, `created_by`, `updated_by`, `deleted_by`) VALUES
-(1, 'Gents Shoes', 'Shoes for men', 1, 0, 1, NULL, '2024-05-29 23:18:11', NULL, NULL, NULL, NULL, NULL),
-(2, 'Ladies Shoes', 'Shoes for ladies', 1, 0, 1, NULL, '2024-05-29 23:18:11', NULL, NULL, NULL, NULL, NULL);
+(1, 'Gents Shoes', 'Shoes for men', 1, 0, 1, NULL, '2024-06-10 20:51:35', NULL, NULL, NULL, NULL, NULL),
+(2, 'Ladies Shoes', 'Shoes for ladies', 1, 0, 1, NULL, '2024-06-10 20:51:35', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -254,8 +247,8 @@ CREATE TABLE `product_master` (
 --
 
 INSERT INTO `product_master` (`id`, `name`, `category_id`, `subcategory_id`, `description`, `image`, `status`, `created_at`, `updated_at`, `deleted_at`, `created_by`, `updated_by`, `deleted_by`) VALUES
-(1, 'Gents Shoe', 1, 1, NULL, NULL, 1, '2024-05-29 23:18:13', NULL, NULL, NULL, NULL, NULL),
-(2, 'Ladies Shoe', 2, 2, NULL, NULL, 1, '2024-05-29 23:18:13', NULL, NULL, NULL, NULL, NULL);
+(1, 'Gents Shoe', 1, 1, NULL, NULL, 1, '2024-06-10 20:51:35', NULL, NULL, NULL, NULL, NULL),
+(2, 'Ladies Shoe', 2, 2, NULL, NULL, 1, '2024-06-10 20:51:35', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -301,8 +294,8 @@ CREATE TABLE `product_subcategory` (
 --
 
 INSERT INTO `product_subcategory` (`id`, `category_id`, `name`, `description`, `primary_visibility`, `display_order`, `status`, `created_at`, `updated_at`, `deleted_at`, `created_by`, `updated_by`, `deleted_by`) VALUES
-(1, 1, 'Gents/Men', NULL, 1, NULL, 1, '2024-05-29 23:18:12', NULL, NULL, NULL, NULL, NULL),
-(2, 2, 'Ladies/Women', NULL, 1, NULL, 1, '2024-05-29 23:18:12', NULL, NULL, NULL, NULL, NULL);
+(1, 1, 'Gents/Men', NULL, 1, NULL, 1, '2024-06-10 20:51:35', NULL, NULL, NULL, NULL, NULL),
+(2, 2, 'Ladies/Women', NULL, 1, NULL, 1, '2024-06-10 20:51:35', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -328,6 +321,8 @@ CREATE TABLE `product_variants` (
   `hsn_code` varchar(50) DEFAULT NULL,
   `gst_rate` decimal(4,2) NOT NULL DEFAULT 0.00,
   `image` varchar(150) DEFAULT NULL,
+  `size` tinyint(4) DEFAULT NULL,
+  `color` varchar(100) DEFAULT NULL,
   `is_bundle_product` tinyint(4) NOT NULL DEFAULT 0,
   `have_free_product` tinyint(4) NOT NULL DEFAULT 0,
   `rating_count` decimal(4,2) NOT NULL DEFAULT 0.00,
@@ -608,8 +603,8 @@ CREATE TABLE `unit_master` (
 --
 
 INSERT INTO `unit_master` (`id`, `name`, `short_name`, `description`, `child_unit_value`, `child_unit_id`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Piece', 'Pcs', '1 Piece', NULL, NULL, 1, '2024-05-29 23:18:10', NULL, NULL),
-(2, 'Box', 'Box', '1 Box', NULL, NULL, 1, '2024-05-29 23:18:10', NULL, NULL);
+(1, 'Piece', 'Pcs', '1 Piece', NULL, NULL, 1, '2024-06-10 20:51:34', NULL, NULL),
+(2, 'Box', 'Box', '1 Box', NULL, NULL, 1, '2024-06-10 20:51:34', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -648,9 +643,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `hash_id`, `unique_id`, `login_id`, `first_name`, `middle_name`, `last_name`, `user_name`, `email_id`, `password`, `phone_number`, `whatsapp_number`, `gender`, `is_crm_access`, `agent_id`, `user_category`, `status`, `created_at`, `updated_at`, `deleted_at`, `created_by`, `updated_by`, `deleted_by`) VALUES
-(1, '2e466b48-720a-4045-a2c0-92938fb0b055', '4100000342', NULL, 'Onex', NULL, 'Dev', 'onexdev', 'devteam@onexcrm.com', '$2y$10$cnQyH294D7tM9JKIiAmBRuEZ8uMt4GBlkSeOLXRS13hRxuBgQMKYm', '9836395513', '9836395513', 'Male', 1, NULL, 1, 1, '2024-05-29 23:18:22', NULL, NULL, NULL, NULL, NULL),
-(99, 'aa0b3487-8b53-4b21-a260-de75e4829689', '2600000197', NULL, 'Difo', NULL, 'Self', NULL, 'admin@difo.com', NULL, NULL, NULL, NULL, 0, NULL, 2, 1, '2024-05-29 23:18:14', NULL, NULL, NULL, NULL, NULL),
-(100, '41e380a5-ce10-40aa-bcdd-337cac47dcab', '7800000380', NULL, 'Test', NULL, 'Client', 'difoshoes', 'super.admin@difo.com', '$2y$10$zARL5fQdotXVjBmCvXpI7.6Ez3nuLXHqMmL4aEspEYU8UZtw5YD0S', NULL, NULL, NULL, 1, NULL, 1, 1, '2024-05-29 23:19:48', NULL, NULL, NULL, NULL, NULL);
+(1, 'e5ca9e3f-1e9a-4054-8b8c-0bf4f994933e', '7400000713', NULL, 'Onex', NULL, 'Dev', 'onexdev', 'devteam@onexcrm.com', '$2y$10$bzSF3TwgyhYxu8AimDq4aestAM0zF/WX4Q3QzBDssnSHytp9PWxCC', '9836395513', '9836395513', 'Male', 1, NULL, 1, 1, '2024-06-10 20:52:29', NULL, NULL, NULL, NULL, NULL),
+(104, 'aa0b3487-8b53-4b21-a260-de75e4829689', '2600000197', NULL, 'Difo', NULL, 'Self', NULL, 'admin@difo.com', NULL, NULL, NULL, NULL, 0, NULL, 2, 1, '2024-06-10 20:51:36', NULL, NULL, NULL, NULL, NULL),
+(106, 'aec4078d-ced2-4fd4-8130-52fa0b4cb2a0', '3000000533', NULL, 'Test', NULL, 'Client', 'DifoAdmin', 'superadmin@difo.com', '$2y$10$de2Dj0pVxx9MQcRhyTthCu.Q1cZu76yNUT5MGJPiuXp5l5TyLXCre', NULL, NULL, NULL, 1, NULL, 1, 1, '2024-06-10 21:05:07', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -723,8 +718,9 @@ CREATE TABLE `user_roles` (
 --
 
 INSERT INTO `user_roles` (`id`, `user_id`, `role_id`, `status`, `created_at`, `updated_at`) VALUES
-(91, 1, 1, 1, '2024-05-29 23:18:22', NULL),
-(92, 100, 1, 1, '2024-05-29 23:19:48', NULL);
+(96, 1, 1, 1, '2024-06-10 20:52:29', NULL),
+(97, 105, 1, 1, '2024-06-10 20:54:22', NULL),
+(98, 106, 1, 1, '2024-06-10 21:05:07', NULL);
 
 --
 -- Indexes for dumped tables
@@ -807,7 +803,6 @@ ALTER TABLE `product_subcategory`
 --
 ALTER TABLE `product_variants`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `sku` (`sku`),
   ADD UNIQUE KEY `barcode_no` (`barcode_no`);
 
 --
@@ -926,7 +921,7 @@ ALTER TABLE `company_categories`
 -- AUTO_INCREMENT for table `company_information`
 --
 ALTER TABLE `company_information`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `crm_settings`
@@ -1040,7 +1035,7 @@ ALTER TABLE `unit_master`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
 
 --
 -- AUTO_INCREMENT for table `users_profile`
@@ -1058,7 +1053,7 @@ ALTER TABLE `user_categories`
 -- AUTO_INCREMENT for table `user_roles`
 --
 ALTER TABLE `user_roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

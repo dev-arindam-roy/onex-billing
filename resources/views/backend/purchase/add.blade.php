@@ -75,7 +75,7 @@
     <div class="col-md-6">
         <div class="form-group">
             <label for="productId" class="onex-form-label">Product: <em>*</em></label>
-            <select name="product_id" class="form-control onex-select2" id="productId" required="required" data-placeholder="Select a product">
+            <select name="product_id" class="form-control" id="productId" required="required" data-placeholder="Select a product">
                 <option value=""></option>
                 @if(!empty($productVariants) && count($productVariants))
                     @foreach($productVariants as $k => $v)
@@ -84,7 +84,10 @@
                             data-hsn-code="{{ $v->hsn_code }}"
                             data-gst-rate="{{ $v->gst_rate }}"
                             data-price="{{ $v->price }}"
-                            data-unit-id="{{ $v->unit_id }}">{{ $v->name }} (size:{{ $v->size }}) (color:{{ $v->color }})</option>
+                            data-unit-id="{{ $v->unit_id }}"
+                            data-size="{{ $v->size }}"
+                            data-color="{{ $v->color }}"
+                            data-sku="{{ $v->sku }}">{{ $v->name }}</option>
                     @endforeach
                 @endif
             </select>
@@ -198,6 +201,30 @@
 @push('page_js')
 <script>
 $(document).ready(function() {
+    $('#productId').select2({
+        width: '100%',
+        allowClear: true,
+        dropdownPosition: 'below',
+        templateResult: format,
+        escapeMarkup: function(m) {
+            return m;
+        }
+    });
+    function format(data) {
+        if (typeof data.id == "undefined" || !data.id) return data.text;
+        var _optSize = $(data.element).data('size') ?? '';
+        var _optColor = $(data.element).data('color') ?? '';
+        var _optSku = $(data.element).data('sku') ?? ''; 
+        var $container = $(`<div class="select2-result-repository clearfix">
+                <div class="select2-result-repository__meta">
+                    <div class="select2-result-repository__title">${data.text}</div>
+                    <div class="select2-result-repository__description">SKU:${_optSku} | Size:${_optSize} | Color:${_optColor}</div>
+                </div>
+            </div>`
+        );
+        
+        return $container;
+    }
     $('.onex-datepicker').datepicker({
         container: '#bsDatePickerContainer',
         format: 'yyyy/mm/dd',
@@ -325,10 +352,10 @@ $(document).ready(function() {
     $('body').on('change', '#productId', function () {
         if($(this).val() != '') {
             let productVariantId = $(this).val();
-            let gstRate = $("#productId").select2().find(":selected").data("gst-rate");
-            let hsnCode = $("#productId").select2().find(":selected").data('hsn-code');
-            let price = $("#productId").select2().find(":selected").data('price');
-            let unitId = $("#productId").select2().find(":selected").data('unit-id');
+            let gstRate = $("#productId").find(":selected").data("gst-rate");
+            let hsnCode = $("#productId").find(":selected").data('hsn-code');
+            let price = $("#productId").find(":selected").data('price');
+            let unitId = $("#productId").find(":selected").data('unit-id');
             //console.log(productVariantId, gstRate, hsnCode, price, unitId);
             $('#gstRate').val(gstRate);
             $('#saleGstRate').val(gstRate);
@@ -348,9 +375,9 @@ $(document).ready(function() {
     });
 
     function purchasePriceCalculate() {
-        let productQty = parseFloat($('#productQty').val());
-        let purchasePrice = parseFloat($('#purchasePrice').val());
-        let gstRate = parseFloat($('#gstRate').val());
+        let productQty = ($('#productQty').val() != "" && !isNaN($('#productQty').val())) ? parseFloat($('#productQty').val()) : 0;
+        let purchasePrice = ($('#purchasePrice').val() != "" && !isNaN($('#purchasePrice').val())) ? parseFloat($('#purchasePrice').val()) : 0;
+        let gstRate = ($('#gstRate').val() != "" && !isNaN($('#gstRate').val())) ? parseFloat($('#gstRate').val()) : 0;
         let unitTotal = productQty * purchasePrice;
         let totalGst = (unitTotal * gstRate) / 100;
         let totalAmount = unitTotal + totalGst;
@@ -360,8 +387,8 @@ $(document).ready(function() {
     }
 
     function sellingPriceCalculate() {
-        let saleGstRate = parseFloat($('#saleGstRate').val());
-        let salePrice = parseFloat($('#salePrice').val());
+        let saleGstRate = ($('#saleGstRate').val() != "" && !isNaN($('#saleGstRate').val())) ? parseFloat($('#saleGstRate').val()) : 0;
+        let salePrice = ($('#salePrice').val() != "" && !isNaN($('#salePrice').val())) ? parseFloat($('#salePrice').val()) : 0;
         let totalGst = (salePrice * saleGstRate) / 100;
         let totalAmount = salePrice + totalGst;
         $('#saleGstAmount').val(totalGst.toFixed(2));
