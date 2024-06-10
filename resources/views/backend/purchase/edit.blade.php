@@ -68,7 +68,7 @@
     <div class="col-md-2"></div>
 </div>
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-12">
         <div class="form-group">
             <label for="note" class="onex-form-label">Any Note:</label>
             <textarea name="note" id="note" class="form-control" placeholder="Any Note...">{{ $purchase->note }}</textarea> 
@@ -83,6 +83,8 @@
                     <tr>
                         <th>SL</th>
                         <th>Product</th>
+                        <th>Size</th>
+                        <th>Color</th>
                         <th>QTY</th>
                         <th>Purchase Price</th>
                         <th>Sale Price</th>
@@ -103,6 +105,8 @@
                                         <span style="font-size:13px;"><strong>{{ $v->productVariantInfo->sku }}</strong></span>
                                     @endif
                                 </td>
+                                <td>{{ $v->productVariantInfo->size }}</td>
+                                <td>{{ $v->productVariantInfo->color }}</td>
                                 <td>
                                     {{ str_replace(".00","", $v->product_qty) }}
                                     @if (!empty($v->unitInfo))
@@ -118,16 +122,16 @@
                             @php $sl++; @endphp
                         @endforeach
                             <tr style="background-color: rgba(0, 0, 0, .05);">
-                                <td colspan="6" style="text-align: right; font-weight: 600;">Total Bill Amount:</td>
+                                <td colspan="8" style="text-align: right; font-weight: 600;">Total Bill Amount:</td>
                                 <td colspan="2" style="text-align: left; font-weight: 600;"><strong>{{ number_format($purchase->bill_amount, 2) }}</strong></td>
                             </tr>
                             <tr style="background-color: rgba(0, 0, 0, .05);">
-                                <td colspan="6" style="text-align: right; font-weight: 600;">Due Amount:</td>
+                                <td colspan="8" style="text-align: right; font-weight: 600;">Due Amount:</td>
                                 <td colspan="2" style="text-align: left; font-weight: 600;"><strong>{{ number_format($purchase->due_amount, 2) }}</strong></td>
                             </tr>
                     @else
                         <tr>
-                            <td colspan="7">No purchase items found!</td>
+                            <td colspan="9">No purchase items found!</td>
                         </tr>
                     @endif
                 </tbody>

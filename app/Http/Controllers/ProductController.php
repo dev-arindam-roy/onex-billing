@@ -501,6 +501,8 @@ class ProductController extends Controller
     public function saveVariants(Request $request)
     {
         $sku = strtoupper(str_replace(' ', '-', $request->input('sku')));
+
+        /*
         $checkSku = ProductVariants::where('sku', $sku)->where('status', '!=', 3)->exists();
 
         if ($checkSku) {
@@ -509,6 +511,7 @@ class ProductController extends Controller
                 ->with('message_title', 'Sorry!')
                 ->with('message_text', 'Product sku is already exist');
         }
+        */
 
         $obj = new ProductVariants();
         $obj->sku = $sku;
@@ -526,6 +529,8 @@ class ProductController extends Controller
         $obj->offer_text = $request->input('offer_text');
         $obj->hsn_code = $request->input('hsn_code') ?? NULL;
         $obj->gst_rate = $request->input('gst_rate') ?? 0;
+        $obj->size = $request->input('size') ?? NULL;
+        $obj->color = $request->input('color') ?? NULL;
         if ($request->hasFile('image') && !empty($request->file('image'))) {
             $image = $request->file('image');
             $realPath = $image->getRealPath();
@@ -545,9 +550,11 @@ class ProductController extends Controller
             $obj->image = $newName;
         }
         if ($obj->save()) {
+            /*
             if ($request->has('product_meta_fields') && !empty($request->input('product_meta_fields'))) {
                 self::addUpdateVariantMetaFields($obj->id, $request->input('product_meta_fields'));
             }
+            */
             return redirect()->back()
                 ->with('message_type', 'success')
                 ->with('message_title', 'Done!')
@@ -587,6 +594,7 @@ class ProductController extends Controller
     public function updateVariants(Request $request, $id)
     {
         $sku = strtoupper(str_replace(' ', '-', $request->input('sku')));
+        /*
         $checkSku = ProductVariants::where('sku', $sku)->where('id', '!=', $id)->where('status', '!=', 3)->exists();
 
         if ($checkSku) {
@@ -595,6 +603,7 @@ class ProductController extends Controller
                 ->with('message_title', 'Sorry!')
                 ->with('message_text', 'Product sku is already exist');
         }
+        */
 
         $obj = ProductVariants::findOrFail($id);
         $obj->sku = $sku;
@@ -611,6 +620,8 @@ class ProductController extends Controller
         $obj->offer_text = $request->input('offer_text');
         $obj->hsn_code = $request->input('hsn_code') ?? NULL;
         $obj->gst_rate = $request->input('gst_rate') ?? 0;
+        $obj->size = $request->input('size') ?? NULL;
+        $obj->color = $request->input('color') ?? NULL;
         if ($request->hasFile('image') && !empty($request->file('image'))) {
             $image = $request->file('image');
             $realPath = $image->getRealPath();
@@ -630,9 +641,11 @@ class ProductController extends Controller
             $obj->image = $newName;
         }
         if ($obj->save()) {
+            /*
             if ($request->has('product_meta_fields') && !empty($request->input('product_meta_fields'))) {
                 self::addUpdateVariantMetaFields($obj->id, $request->input('product_meta_fields'));
             }
+            */
             return redirect()->back()
                 ->with('message_type', 'success')
                 ->with('message_title', 'Done!')

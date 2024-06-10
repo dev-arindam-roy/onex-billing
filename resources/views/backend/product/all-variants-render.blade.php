@@ -6,6 +6,8 @@
                 <th class="onex-lg">Base Product</th>
                 <th>Image</th>
                 <th class="onex-xl">Variant Name</th>
+                <th class="onex-sm">Size</th>
+                <th class="onex-sm">Color</th>
                 <th class="onex-md">Brand</th>
                 <th class="onex-sm">Unit</th>
                 <th class="onex-sm">Price</th>
@@ -34,6 +36,8 @@
                         @endif
                     </td>
                     <td>{{ $value->name }}<br/><strong>Item No:</strong> {{ $value->sku }}</td>
+                    <td>@if(!empty($value->size)) <span class="badge badge-pill badge-dark onex-pill">{{ $value->size }}</span> @endif</td>
+                    <td>@if(!empty($value->color)) <span class="badge badge-dark onex-badge">{{ $value->color }}</span> @endif</td>
                     <td>@if(!empty($value->productBrand) && !empty($value->productBrand->name)){{ $value->productBrand->name }}@endif</td>
                     <td>@if(!empty($value->productUnit) && !empty($value->productUnit->name)){{ $value->productUnit->name }}@endif</td>
                     <td>{{ $value->price }}</td>
@@ -67,7 +71,7 @@
             @endforeach
         @else
             <tr>
-                <td colspan="13">No product variants found. Please create product variant</td>
+                <td colspan="15">No product variants found. Please create product variant</td>
             </tr>
         @endif
         </tbody>

@@ -74,7 +74,9 @@ class PurchaseController extends Controller
                 'price', 
                 'old_price', 
                 'hsn_code', 
-                'gst_rate'
+                'gst_rate',
+                'size',
+                'color'
             )
             ->where('status', '!=', 3)
             ->orderBy('id', 'desc')
@@ -109,7 +111,9 @@ class PurchaseController extends Controller
                 'price', 
                 'old_price', 
                 'hsn_code', 
-                'gst_rate'
+                'gst_rate',
+                'size',
+                'color'
             )
             ->where('status', '!=', 3)
             ->orderBy('id', 'desc')
@@ -269,7 +273,9 @@ class PurchaseController extends Controller
                 'price', 
                 'old_price', 
                 'hsn_code', 
-                'gst_rate'
+                'gst_rate',
+                'size',
+                'color'
             )
             ->where('status', '!=', 3)
             ->orderBy('id', 'desc')

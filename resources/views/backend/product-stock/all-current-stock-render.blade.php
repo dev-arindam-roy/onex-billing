@@ -3,11 +3,13 @@
         <thead>
             <tr>
                 <th class="onex-xxs">SL</th>
+                <th class="onex-md">Brand</th>
                 <th class="onex-xl">Item No</th>
                 <th class="onex-xl">Name</th>
-                <th class="onex-md">Brand</th>
-                <th class="onex-xl">Barcode No</th>
+                <th class="onex-sm">Size</th>
+                <th class="onex-sm">Color</th>
                 <th class="onex-md">Current Stock</th>
+                <th class="onex-xl">Barcode No</th>
                 <th class="onex-sm">HSN</th>
                 <th class="onex-sm">GST</th>
                 <th class="onex-sm">Status</th>
@@ -20,11 +22,13 @@
             @foreach($data as $key => $value)
                 <tr>
                     <td>{{ $sl }}</td>
+                    <td>@if(!empty($value->productBrand) && !empty($value->productBrand->name)){{ $value->productBrand->name }}@endif</td>
                     <td>{{ $value->sku }}</td>
                     <td>{{ $value->name }}</td>
-                    <td>@if(!empty($value->productBrand) && !empty($value->productBrand->name)){{ $value->productBrand->name }}@endif</td>
-                    <td>{{ $value->barcode_no }}</td>
+                    <td>@if(!empty($value->size)) <span class="badge badge-pill badge-dark onex-pill">{{ $value->size }}</span> @endif</td>
+                    <td>@if(!empty($value->color)) <span class="badge badge-dark onex-badge">{{ $value->color }}</span> @endif</td>
                     <td style="font-weight: 600;">@if(round($value->available_stock) > 10)<span class="text-success">{{ round($value->available_stock) }}</span>@else<span class="text-danger">{{ round($value->available_stock) }}</span>@endif</td>
+                    <td>{{ $value->barcode_no }}</td>
                     <td>{{ $value->hsn_code }}</td>
                     <td>{{ round($value->gst_rate) }} %</td>
                     <td>{!! ($value->status == 1) ? '<span class="text-success">Active</span>' : '<span class="text-danger">Inactive</span>' !!}</td>
@@ -34,7 +38,7 @@
             @endforeach
         @else
             <tr>
-                <td colspan="10">No product found, Please add product & add stock by purchase</td>
+                <td colspan="12">No product found, Please add product & add stock by purchase</td>
             </tr>
         @endif
         </tbody>

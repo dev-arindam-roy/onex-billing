@@ -88,7 +88,9 @@ class SaleController extends Controller
                 'old_price', 
                 'hsn_code', 
                 'gst_rate',
-                'available_stock'
+                'available_stock',
+                'size',
+                'color'
             )
             ->where('status', '!=', 3)
             ->orderBy('id', 'desc')
@@ -183,7 +185,9 @@ class SaleController extends Controller
                 'name',
                 'sku',
                 'barcode_no',
-                'hsn_code'
+                'hsn_code',
+                'size',
+                'color'
             )
             ->with(['productBrand'])
             ->where('id', $productId)

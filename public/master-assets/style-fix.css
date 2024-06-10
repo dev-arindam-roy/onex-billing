@@ -279,3 +279,12 @@ tr.dummy-tr td {
     background-repeat: no-repeat;
     animation: loading 1s infinite;
 }
+.onex-pill {
+    font-size: 14px; 
+    padding: 4px; 
+    font-family: cursive;
+}
+.onex-badge {
+    font-size: 14px; 
+    padding: 4px; 
+}

@@ -388,6 +388,8 @@ $(document).ready(function() {
                             <span class="cart-item-product-barcode">${item.product_info.barcode_no}</span><br/>
                             <span class="cart-item-product-brand">${item.product_info.product_brand.name}</span><br/>
                         </td>
+                        <td>${item.product_info.size ?? ''}</td>
+                        <td>${item.product_info.color ?? ''}</td>
                         <td>${item.product_info.hsn_code ?? ''}</td>
                         <td>${item.price_info.item_qty}</td>
                         <td>${parseFloat(item.price_info.unit_price).toFixed(2)}</td>
@@ -427,6 +429,8 @@ $(document).ready(function() {
                 <td>1.</td>
                 <td>--</td>
                 <td>--</td>
+                <td>--</td>
+                <td>--</td>
                 <td>0</td>
                 <td>0.00</td>
                 <td>0.00</td>
@@ -438,6 +442,8 @@ $(document).ready(function() {
             </tr>
             <tr class="dummy-tr">
                 <td>2.</td>
+                <td>--</td>
+                <td>--</td>
                 <td>--</td>
                 <td>--</td>
                 <td>0</td>

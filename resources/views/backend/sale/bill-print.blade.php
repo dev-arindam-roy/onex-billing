@@ -74,7 +74,9 @@
             <tr>
                 <th style="width: 60px; padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left;"><label style="font-size: 12px;">SL NO</label></th>
                 <th style="width: 35%; padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left;"><label style="font-size: 12px;">PRODUCT</label></th>
-                <th style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left;"><label style="font-size: 12px;">HSN</label></th>
+                <th style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left;"><label style="font-size: 12px;">SIZE</label></th>
+                <th style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left;"><label style="font-size: 12px;">COLOR</label></th>
+                <!--th style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left;"><label style="font-size: 12px;">HSN</label></th-->
                 <th style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left;"><label style="font-size: 12px;">QTY</label></th>
                 <th style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left;"><label style="font-size: 12px;">PRICE</label></th>
                 <th style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left;"><label style="font-size: 12px;">GST</label></th>
@@ -89,27 +91,11 @@
                 @endphp
                 @foreach($data->saleProducts as $v)
                     @if(!empty($v->productInfo) && !empty($v->unitInfo))
-                        @php
-                            $color = $size = "";
-                            if (!empty($v->productInfo->metaFields) && count($v->productInfo->metaFields)) {
-                                foreach ($v->productInfo->metaFields as $meta) {
-                                    if (!empty($meta->field_key) && $meta->field_key == 'color') {
-                                        $color = $meta->field_value;
-                                    }
-                                    if (!empty($meta->field_key) && $meta->field_key == 'size') {
-                                        $size = $meta->field_value;
-                                    }
-                                }
-                            }
-                        @endphp
                         <tr>
                             <td style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left; font-size: 12px;">{{ $sl }}.</td>
                             <td style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left; font-size: 12px; word-wrap: break-word;">
                                 <p style="line-height: 5px;"><span style="font-size: 12px; font-weight: 600;">{{ $v->productInfo->name }}</span></p>
                                 <p style="line-height: 5px;"><span style="font-size: 12px; font-weight: normal;"><span style="font-weight: 600;">Item No:</span> {{ $v->productInfo->sku }}</span></p>
-                                @if (!empty($size) || !empty($color))
-                                    <p style="line-height: 3px;"><span style="font-size: 12px; font-weight: normal;"><span style="font-weight: 600;">Size/Color:</span> {{ $size }} / {{ $color }}</span></p>
-                                @endif
                                 @if(!empty($v->productInfo->short_description))
                                     <p style="line-height: 2px;"><span style="font-size: 12px; font-style: italic; font-weight: normal;">{{ $v->productInfo->short_description }}</span></p>
                                 @endif
@@ -117,7 +103,9 @@
                                     <p style="line-height: 1px;"><span style="font-size: 12px; font-weight: 600;">{{ $v->productInfo->productBrand->name }}</span></p>
                                 @endif
                             </td>
-                            <td style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left; font-size: 12px;">{{ $v->productInfo->hsn_code }}</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left; font-size: 12px;">{{ $v->productInfo->size }}</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left; font-size: 12px;">{{ $v->productInfo->color }}</td>
+                            {{--<td style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left; font-size: 12px;">{{ $v->productInfo->hsn_code }}</td>--}}
                             <td style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left; font-size: 12px;">
                                 {{ str_replace(".00","", $v->product_qty) }}
                                 {{ $v->unitInfo->short_name }}
@@ -134,23 +122,23 @@
                 @endforeach
             @else
                 <tr>
-                    <td colspan="10" style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left; font-size: 12px;">No records found!</td>
+                    <td colspan="11" style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left; font-size: 12px;">No records found!</td>
                 </tr>
             @endif
             <tr>
-                <th colspan="9" style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: right; font-size: 12px;"><label>Total Amount</label></th>
+                <th colspan="10" style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: right; font-size: 12px;"><label>Total Amount</label></th>
                 <th style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left; font-size: 12px;"><label>{{ number_format($data->total_amount, 2) }}</label></th>
             </tr>
             <tr>
-                <th colspan="9" style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: right; font-size: 12px;"><label>Discount</label></th>
+                <th colspan="10" style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: right; font-size: 12px;"><label>Discount</label></th>
                 <th style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left; font-size: 12px;"><label>{{ number_format($data->total_discount, 2) }}</label></th>
             </tr>
             <tr>
-                <th colspan="9" style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: right; font-size: 12px;"><label>Total Payable Amount</label></th>
+                <th colspan="10" style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: right; font-size: 12px;"><label>Total Payable Amount</label></th>
                 <th style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left; font-size: 12px;"><label>{{ number_format($data->payable_amount, 2) }}</label></th>
             </tr>
             <tr>
-                <td colspan="10" style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left; font-size: 13px;">
+                <td colspan="11" style="padding: 8px; border: 1px solid #ddd; vertical-align: middle; text-align: left; font-size: 13px;">
                     <label><b>In Words: </b></label>
                     <p style="line-height: 5px;">
                         Your payable amount is <strong>{{ ucwords(Helper::spellNumber(round($data->payable_amount))) }}</strong>

@@ -62,7 +62,7 @@
                             data-hsn-code="{{ $v->hsn_code }}"
                             data-gst-rate="{{ $v->gst_rate }}"
                             data-price="{{ $v->price }}"
-                            data-unit-id="{{ $v->unit_id }}">{{ $v->name }} - {{ $v->sku }} - ({{ str_replace('.00', '', $v->available_stock) }})</option>
+                            data-unit-id="{{ $v->unit_id }}">{{ $v->name }} - (size:{{ $v->size }}) (color:{{ $v->color }}) - (stock:{{ str_replace('.00', '', $v->available_stock) }})</option>
                     @endforeach
                 @endif
             </select>
@@ -152,6 +152,8 @@
                 <tr>
                     <th>SL</th>
                     <th>PRODUCT</th>
+                    <th>SIZE</th>
+                    <th>COLOR</th>
                     <th>HSN</th>
                     <th>QTY</th>
                     <th>UNIT PRICE</th>
@@ -168,17 +170,17 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="9" style="text-align:right;"><strong>Total Amount:</strong></td>
+                    <td colspan="11" style="text-align:right;"><strong>Total Amount:</strong></td>
                     <td colspan="2" id="totalCartAmount">0.00</td>
                 </tr>
                 <tr>
-                    <td colspan="9" style="text-align:right;"><strong>Discount:</strong></td>
+                    <td colspan="11" style="text-align:right;"><strong>Discount:</strong></td>
                     <td colspan="2" style="width:100px;">
                         <input type="number" id="totalCartDiscount" min="0" value="0.00" style="width:100px;" />
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="9" style="text-align:right;"><strong>Total Payable Amount:</strong></td>
+                    <td colspan="11" style="text-align:right;"><strong>Total Payable Amount:</strong></td>
                     <td colspan="2" id="totalPayableCartAmount" style="font-weight: 600;">0.00</td>
                 </tr>
             </tfoot>

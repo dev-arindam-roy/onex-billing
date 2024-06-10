@@ -118,29 +118,15 @@
     </div>
     <div class="col-md-4"></div>
 </div>
-@php
-    $selectedColor = "";
-    $selectedSize = "";
-    if (!empty($product->metaFields) && count($product->metaFields)) {
-        foreach ($product->metaFields as $v) {
-            if (!empty($v->field_key == "color")) {
-                $selectedColor = $v->field_value;
-            }
-            if (!empty($v->field_key == "size")) {
-                $selectedSize = $v->field_value;
-            }
-        }
-    }
-@endphp
 <div class="row">
     <div class="col-md-2">
         <div class="form-group">
             <label for="productColor" class="onex-form-label">Color: </label>
-            <select name="product_meta_fields[color]" id="productColor" class="form-control onex-select2" data-placeholder="Color">
+            <select name="color" id="productColor" class="form-control onex-select2" data-placeholder="Color">
                 <option value=""></option>
                 @if(!empty($all_colors))
                     @foreach($all_colors as $v)
-                        <option value="{{ $v }}" @if($selectedColor == $v) selected="selected" @endif>{{ $v }}</option>
+                        <option value="{{ $v }}" @if($product->color == $v) selected="selected" @endif>{{ $v }}</option>
                     @endforeach
                 @endif
             </select>
@@ -149,10 +135,10 @@
     <div class="col-md-2">
         <div class="form-group">
             <label for="productSize" class="onex-form-label">Size: </label>
-            <select name="product_meta_fields[size]" id="productSize" class="form-control onex-select2" data-placeholder="Size">
+            <select name="size" id="productSize" class="form-control onex-select2" data-placeholder="Size">
                 <option value=""></option>
                 @for($i = 1; $i <= 14; $i++)
-                    <option value="{{ $i }}" @if($selectedSize == $i) selected="selected" @endif>{{ $i }}</option>
+                    <option value="{{ $i }}" @if($product->size == $i) selected="selected" @endif>{{ $i }}</option>
                 @endfor
             </select>
         </div>
